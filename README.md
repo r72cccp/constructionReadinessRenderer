@@ -2,11 +2,19 @@
 
 Рендер символического многокорпусного здания по данным о степени готовности его элементов
 
-## Представление работающего кода будет тут:
+## Оглавление
+
+  * [Где увидеть работающий пример кода](#prototype_example)
+  * [Пример вводных данных (пока не утверждён)](#data_example)
+  * [Как это примерно должно выглядеть](#visualization_example)
+  * [Как это встраивать на страницу](#embedding_example)
+  * [Как это обеспечить данными](#data_flow_example)
+
+## <a name="prototype_example">Представление работающего кода будет тут:</a>
 
 https://codepen.io/SergioBelevskij/pen/NWqrZJJ?editable=true
 
-## Пример вводных данных (пока не утверждён):
+## <a name="data_example">Пример вводных данных (пока не утверждён):</a>
 
 ```
 {
@@ -46,3 +54,10 @@ https://codepen.io/SergioBelevskij/pen/NWqrZJJ?editable=true
 	]
 }
 ```
+
+## <a name="visualization_example">Как это примерно должно выглядеть</a>
+
+## <a name="embedding_example">Как это встраивать на страницу</a>
+
+## <a name="data_flow_example">Как это обеспечить данными</a>
+
