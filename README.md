@@ -404,5 +404,10 @@ https://codepen.io/SergioBelevskij/pen/NWqrZJJ?editable=true
 
 ## <a name="embedding_example">Как это встраивать на страницу</a>
 
-## <a name="data_flow_example">Как это обеспечить данными</a>
+  * Идёте сюда: https://codepen.io/SergioBelevskij/pen/NWqrZJJ?editable=true;
+  * Копируете HTML разметку;
+  * Вставляете в 1С документ;
 
+  P.S. Позже данный код будет генерироваться автоматически и инструкция может измениться.
+
+## <a name="data_flow_example">Как это обеспечить данными</a>
