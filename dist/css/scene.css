@@ -17,6 +17,8 @@ html, body, canvas {
 .title {
   top: 20px;
   left: 20px;
+  height: 80%;
+  overflow-y: auto;
 }
 .footer {
   bottom: 20px;

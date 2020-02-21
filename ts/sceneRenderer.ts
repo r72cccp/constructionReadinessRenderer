@@ -119,7 +119,7 @@ export const sceneInit = () => {
   let maximumHeight = 0;
   constructionReadinessData.forEach((complexOfBuildings) => {
     const sections = complexOfBuildings['СтруктураСекций'];
-    sections.forEach((section, sectionIndex) => {
+    sections.forEach((section) => {
       const floors = section['СтруктураЭтажей'];
       if (floors && floors.length && floors.length > maximumHeight) maximumHeight = floors.length;
     });
@@ -131,16 +131,18 @@ export const sceneInit = () => {
   const baseX = canvasWidth / 2;
   const baseZ = -canvasHeight + cubeEdgeLength;
   let complexOfBuildingsLength = 0;
+  let complexTitleBlockContent = '';
 
-  constructionReadinessData.forEach((complexOfBuildings, complexIndex) => {
+  constructionReadinessData.forEach((complexOfBuildings) => {
     // Устанавливаем тайтл и футер
-    domUtils.insertHtmlToElementById('title', complexOfBuildings['Проект']);
+    complexTitleBlockContent += `<h2>${complexOfBuildings['Проект']}</h2>`
     domUtils.insertHtmlToElementById('footer', 'подвал');
     const sections = complexOfBuildings['СтруктураСекций'];
 
     sections.forEach((section, sectionIndex) => {
       const floors = section['СтруктураЭтажей'];
       const sectionName = section['Секция'];
+      complexTitleBlockContent += `<h3>${sectionName}</h3>`;
 
       floors.forEach((sectionFloor, sectionFloorIndex) => {
         const xReal = sectionIndex * cubeEdgeLength + complexOfBuildingsLength;
@@ -159,6 +161,7 @@ export const sceneInit = () => {
 
     complexOfBuildingsLength += (sections.length + 1) * cubeEdgeLength;
   });
+  domUtils.insertHtmlToElementById('title', complexTitleBlockContent);
   const horizontalCenter = (cameraPositionParams.maxX - cameraPositionParams.minX) / 2;
   const verticalCenter = cameraPositionParams.minZ;
   const sceneCenter = rendererUtils.createVertex(baseX + horizontalCenter, 0, baseZ);
