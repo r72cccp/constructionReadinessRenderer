@@ -4,8 +4,9 @@
   "description": "render construction abstract primitive",
   "main": "./dist/main.js",
   "scripts": {
-    "build:prod": "node_modules/.bin/webpack --progress --colors --env.production",
-    "build:dev": "node_modules/.bin/webpack --progress --colors --bail --env.development",
+    "start": "webpack --watch --info-verbosity --progress --colors --bail --env.development verbose",
+    "build:prod": "webpack --progress --colors --env.production",
+    "build:dev": "webpack --progress --colors --bail --env.development",
     "test": "test"
   },
   "repository": {

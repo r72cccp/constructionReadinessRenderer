@@ -1,12 +1,17 @@
 import { Vertex, Face, rendererUtils } from './3dUtils';
 
-export type Cube = {
+export type ColorStyle = {
+  strokeStyle: string;
+  fillStyle: string;
+}
+
+export type Shape = ColorStyle & {
   vertices: Array<Vertex>;
   faces: Array<Face>;
 };
 
 // Конструктор "кубика"
-const createCube = (center: Vertex, side: number): Cube => {
+const createCube = (center: Vertex, side: number, strokeStyle: string, fillStyle: string): Shape => {
   // Генерация вершин куба (8 штук)
   const d = side / 2;
 
@@ -22,6 +27,8 @@ const createCube = (center: Vertex, side: number): Cube => {
   ];
 
   return {
+    strokeStyle,
+    fillStyle,
     vertices,
     faces: [
       [vertices[0], vertices[1], vertices[2], vertices[3]],

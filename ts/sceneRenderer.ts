@@ -1,35 +1,70 @@
-import { Face, Vertex, rendererUtils } from './lib/3dUtils';
-import { Cube, primitiveUtils } from './lib/primitiveUtils';
-let autorotate_timeout: number;
+import { Face, rendererUtils, Vertex, Vertex2D } from './lib/3dUtils';
+// import { CameraPosition } from './lib/camera';
+import { ColorStyle, primitiveUtils, Shape } from './lib/primitiveUtils';
+import { domUtils } from './lib/domUtils';
+
+let autorotateTimeout: number;
 
 // Инициализация сцены
-export function sceneInit() {
-  function project(M: Vertex) {
-    return rendererUtils.createVertex2D(M.x, M.z);
-  }
+export const sceneInit = () => {
+  // Задаём ширину и высоту канвы
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  console.log('#16', {
+    canvasWidth,
+    canvasHeight,
+  });
 
-  function render(objects: Array<Cube>, ctx: CanvasRenderingContext2D | null, dx: number, dy: number) {
+  // Стилизация объектов
+  const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const project = (M: Vertex): Vertex2D => {
+    return rendererUtils.createVertex2D(M.x, M.z);
+  };
+
+  const cubeColorByReadinessPercent = (readinessPercent: number): ColorStyle => {
+    let strokeStyle, fillStyle;
+    if (readinessPercent === 0) {
+      strokeStyle = 'rgba(65, 71, 71, 0.3)';
+      fillStyle = 'rgba(170, 190, 190, 0.3)';
+    } else if (readinessPercent < 100) {
+      strokeStyle = 'rgba(17, 50, 50, 0.3)';
+      fillStyle = 'rgba(51, 198, 198, 0.3)';
+    } else if (readinessPercent === 100) {
+      strokeStyle = 'rgba(4, 64, 12, 0.3)';
+      fillStyle = 'rgba(70, 198, 55, 0.3)';
+    };
+    return { strokeStyle, fillStyle }
+  };
+
+  const render = (objects: Array<Shape>): void => {
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, 2 * dx, 2 * dy);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // Итерация по всем объектам
-    objects.forEach((object: Cube) => {
-      // For each face
-      object.faces.forEach((face: Face) => {
-        // Draw the first vertex
-        var P = project(face[0]);
-        ctx.beginPath();
-        ctx.moveTo(P.x + dx, -P.y + dy);
+    objects.forEach((object: Shape) => {
+      ctx.strokeStyle = object.strokeStyle;
+      ctx.fillStyle = object.fillStyle;
 
-        // Draw the other vertices
+      // Итерация по граням объекта
+      object.faces.forEach((face: Face) => {
+        // Рисуем первый вертекс
+        let P = project(face[0]);
+        ctx.beginPath();
+        ctx.moveTo(P.x, -P.y);
+
+        // Рисуем остальные вертексы
         face.forEach((vertice: Vertex) => {
           P = project(vertice);
-          ctx.lineTo(P.x + dx, -P.y + dy);
-
+          ctx.lineTo(P.x, -P.y);
         });
 
-        // Close the path and draw the face
+        // Закрываем контур рёбер и рисуем грань
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
@@ -37,116 +72,144 @@ export function sceneInit() {
     });
   };
 
-  (function() {
-    // Fix the canvas width and height
-    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    const dx = canvas.width / 2;
-    const dy = canvas.height / 2;
+  // Начинает перемещение камеры мышью
+  const initMoveCamera = (evt: MouseEvent): void => {
+    // clearTimeout(autorotateTimeout);
+    mousedown = true;
+    mx = evt.clientX;
+    my = evt.clientY;
+  };
 
-    // Objects style
-    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.fillStyle = 'rgba(0, 150, 255, 0.3)';
+  const moveCamera = (evt: MouseEvent): void => {
+    if (mousedown) {
+      const theta = (evt.clientX - mx) * Math.PI / 360;
+      const phi = 0; //(evt.clientY - my) * Math.PI / 180;
 
-    // Create the cubes
-    const objects: Array<Cube> = [];
+      objects.forEach((object: Shape) => {
+        object.vertices.forEach((vertice: Vertex) => {
+          rotate(vertice, sceneCenter, theta, phi);
+        });
+      });
 
-    for(var x = 0; x <= 10; x++) {
-      var zMax = Math.random() * 10;
-      for(var z = 0; z <= zMax; z++) {
-        var cube_center = rendererUtils.createVertex(x * 100, 0, z * 100);
-        const cube = primitiveUtils.createCube(cube_center, 100);
-        objects.push(cube);
-      };
-    };
-    console.log('#116', {
-      objects,
-    });
-
-    // Create the scene
-    // middle x coordinate
-    // var xCenter = objects.reduce((acc, cube) => {
-    //   return acc + cube.
-    // });
-    var scene_center = rendererUtils.createVertex(0, 0, 0);
-
-    // First render
-    render(objects, ctx, dx, dy);
-
-    // Events
-    var mousedown = false;
-    var mx = 0;
-    var my = 0;
-
-    canvas.addEventListener('mousedown', initMove);
-    document.addEventListener('mousemove', move);
-    document.addEventListener('mouseup', stopMove);
-
-    // Rotate a vertice
-    function rotate(M: Vertex, center: Vertex, theta: number, phi: number) {
-      // Rotation matrix coefficients
-      var ct = Math.cos(theta);
-      var st = Math.sin(theta);
-      var cp = Math.cos(phi);
-      var sp = Math.sin(phi);
-
-      // Rotation
-      var x = M.x - center.x;
-      var y = M.y - center.y;
-      var z = M.z - center.z;
-
-      M.x = ct * x - st * cp * y + st * sp * z + center.x;
-      M.y = st * x + ct * cp * y - ct * sp * z + center.y;
-      M.z = sp * y + cp * z + center.z;
-    }
-
-    // Initialize the movement
-    function initMove(evt: MouseEvent) {
-      clearTimeout(autorotate_timeout);
-      mousedown = true;
       mx = evt.clientX;
       my = evt.clientY;
+
+      render(objects);
     }
+  };
 
-    function move(evt: MouseEvent) {
-      if (mousedown) {
-        var theta = (evt.clientX - mx) * Math.PI / 360;
-        var phi = (evt.clientY - my) * Math.PI / 180;
+  // Прекращает движение камеры
+  const stopMoveCamera = (): void => {
+    mousedown = false;
+    // autorotateTimeout = setTimeout(autorotate, 2000);
+  };
 
-        for (var i = 0; i < 8; ++i) {
-          for(var x = 0; x < objects.length; x++) {
-            var cube = objects[x];
-            rotate(cube.vertices[i], scene_center, theta, phi)
-          };
-        };
+  // Генерация кубиков
+  const objects: Array<Shape> = [];
+  const constructionReadinessData = (window as any).ConstructionReadinessRenderer;
 
-        mx = evt.clientX;
-        my = evt.clientY;
+  // Для расчёта положения камеры потребуется оценка размера сгенерированных объектов
+  const cameraPositionParams = {
+    minX: 0, 
+    maxX: 0,
+    minZ: 0,
+    maxZ: 0,
+  };
 
-        render(objects, ctx, dx, dy);
-      }
-    }
+  let maximumHeight = 0;
+  constructionReadinessData.forEach((complexOfBuildings) => {
+    const sections = complexOfBuildings['СтруктураСекций'];
+    sections.forEach((section, sectionIndex) => {
+      const floors = section['СтруктураЭтажей'];
+      if (floors && floors.length && floors.length > maximumHeight) maximumHeight = floors.length;
+    });
+  });
+  console.log('#130', {
+    maximumHeight,
+  });
+  const cubeEdgeLength = canvasHeight / (maximumHeight + 1);
+  const baseX = canvasWidth / 2;
+  const baseZ = -canvasHeight + cubeEdgeLength;
 
-    function stopMove() {
-      mousedown = false;
-      autorotate_timeout = setTimeout(autorotate, 2000);
-    }
+  constructionReadinessData.forEach((complexOfBuildings) => {
+    // Устанавливаем тайтл и футер
+    domUtils.insertHtmlToElementById('title', complexOfBuildings['Проект']);
+    domUtils.insertHtmlToElementById('footer', 'подвал');
+    const sections = complexOfBuildings['СтруктураСекций'];
 
-    function autorotate() {
-      for (var i = 0; i < 8; ++i) {
-        for(var x = 0; x < objects.length; x++) {
-          var cube = objects[x];
-          rotate(cube.vertices[i], scene_center, -Math.PI / 720, Math.PI / 720);
-        };
-      };
+    sections.forEach((section, sectionIndex) => {
+      const floors = section['СтруктураЭтажей'];
+      const sectionName = section['Секция'];
 
-      render(objects, ctx, dx, dy);
+      floors.forEach((sectionFloor, sectionFloorIndex) => {
+        const xReal = sectionIndex * cubeEdgeLength;
+        const zReal = sectionFloorIndex * cubeEdgeLength;
+        const x = baseX + xReal;
+        const z = baseZ + zReal;
+        const readinessPercent = Number(sectionFloor['Готовность']);
+        const { strokeStyle, fillStyle } = cubeColorByReadinessPercent(readinessPercent);
+        if (xReal > cameraPositionParams.maxX) cameraPositionParams.maxX = xReal;
+        if (zReal > cameraPositionParams.maxZ) cameraPositionParams.maxZ = zReal;
+        const cubeCenter = rendererUtils.createVertex(x, 0, z);
+        const cube = primitiveUtils.createCube(cubeCenter, cubeEdgeLength, strokeStyle, fillStyle)
+        objects.push(cube);
+      });
+    });
+  });
+  const horizontalCenter = (cameraPositionParams.maxX - cameraPositionParams.minX) / 2;
+  const verticalCenter = cameraPositionParams.minZ;
+  const sceneCenter = rendererUtils.createVertex(baseX + horizontalCenter, 0, baseZ);
+  
+  console.log('#116', {
+    sceneCenter,
+    cameraPositionParams,
+    constructionReadinessData,
+    objects,
+  });
 
-      autorotate_timeout = setTimeout(autorotate, 30);
-    }
-    autorotate_timeout = setTimeout(autorotate, 2000);
-  })();
+
+  // First render
+  render(objects);
+
+  // Events
+  let mousedown = false;
+  let mx = 0;
+  let my = 0;
+
+  canvas.addEventListener('mousedown', initMoveCamera);
+  document.addEventListener('mousemove', moveCamera);
+  document.addEventListener('mouseup', stopMoveCamera);
+
+  // Rotate a vertice
+  const rotate = (M: Vertex, center: Vertex, theta: number, phi: number): void => {
+    // Rotation matrix coefficients
+    const ct = Math.cos(theta);
+    const st = Math.sin(theta);
+    const cp = Math.cos(phi);
+    const sp = Math.sin(phi);
+
+    // Rotation
+    const x = M.x - center.x;
+    const y = M.y - center.y;
+    const z = M.z - center.z;
+
+    M.x = ct * x - st * cp * y + st * sp * z + center.x;
+    M.y = st * x + ct * cp * y - ct * sp * z + center.y;
+    M.z = sp * y + cp * z + center.z;
+  };
+
+  // const autorotate = (): void => {
+  //   objects.forEach((object: Shape) => {
+  //     object.vertices.forEach((vertice: Vertex) => {
+  //       const theta = -Math.PI / 720;
+  //       const phi = 0.001; // Math.PI / 720;
+  //       rotate(vertice, sceneCenter, theta, phi);
+  //     });
+  //   });
+
+  //   render(objects);
+
+  //   autorotateTimeout = setTimeout(autorotate, 30);
+  // }
+  // autorotateTimeout = setTimeout(autorotate, 2000);
 };
