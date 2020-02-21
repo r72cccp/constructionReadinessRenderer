@@ -404,8 +404,8 @@ https://codepen.io/SergioBelevskij/pen/NWqrZJJ?editable=true
 
 ## <a name="embedding_example">Как это встраивать на страницу</a>
 
-  * Идёте сюда: https://codepen.io/SergioBelevskij/pen/NWqrZJJ?editable=true;
-  * Копируете HTML разметку;
+  * Копируете HTML разметку из файла [dist/template.html](./dist/template.html) как строку;
+  * Заменяете в строке сигнатуру `{jsonAnchor}` на свой json (`[{...}]`);
   * Вставляете в 1С документ;
 
   P.S. Позже данный код будет генерироваться автоматически и инструкция может измениться.
