@@ -130,8 +130,9 @@ export const sceneInit = () => {
   const cubeEdgeLength = canvasHeight / (maximumHeight + 1);
   const baseX = canvasWidth / 2;
   const baseZ = -canvasHeight + cubeEdgeLength;
+  let complexOfBuildingsLength = 0;
 
-  constructionReadinessData.forEach((complexOfBuildings) => {
+  constructionReadinessData.forEach((complexOfBuildings, complexIndex) => {
     // Устанавливаем тайтл и футер
     domUtils.insertHtmlToElementById('title', complexOfBuildings['Проект']);
     domUtils.insertHtmlToElementById('footer', 'подвал');
@@ -142,7 +143,7 @@ export const sceneInit = () => {
       const sectionName = section['Секция'];
 
       floors.forEach((sectionFloor, sectionFloorIndex) => {
-        const xReal = sectionIndex * cubeEdgeLength;
+        const xReal = sectionIndex * cubeEdgeLength + complexOfBuildingsLength;
         const zReal = sectionFloorIndex * cubeEdgeLength;
         const x = baseX + xReal;
         const z = baseZ + zReal;
@@ -155,6 +156,8 @@ export const sceneInit = () => {
         objects.push(cube);
       });
     });
+
+    complexOfBuildingsLength += (sections.length + 1) * cubeEdgeLength;
   });
   const horizontalCenter = (cameraPositionParams.maxX - cameraPositionParams.minX) / 2;
   const verticalCenter = cameraPositionParams.minZ;
