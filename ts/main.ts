@@ -1,4 +1,4 @@
-import { sceneInit } from './sceneRenderer';
+import { sceneInit } from './entities/scene';
 
 // Инициализация 
 if ((window as any).attachEvent) {
