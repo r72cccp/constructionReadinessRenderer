@@ -1,20 +1,23 @@
 import * as THREE from 'three';
+import { mathConstants } from '@constants/mathematical';
+
+const { PI_2 } = mathConstants;
 
 export const PointerLockControls = function(camera, domElement) {
 	this.domElement = domElement;
-	this.isLocked = false;
 
 	const euler = new THREE.Euler(0, 0, 0, 'YXZ');
-	const PI_2 = Math.PI / 2;
 	const vec = new THREE.Vector3();
 
 	const onMouseMove = (event) => {
+    const buttonPressed = event.buttons === 1;
+    if (!buttonPressed) return;
 		const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-		const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+    const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 		euler.setFromQuaternion(camera.quaternion);
 		euler.y -= movementX * 0.002;
 		euler.x -= movementY * 0.002;
-		euler.x = Math.max(- PI_2, Math.min(PI_2, euler.x));
+		euler.x = Math.max(-PI_2, Math.min(PI_2, euler.x));
 		camera.quaternion.setFromEuler(euler);
 	};
 

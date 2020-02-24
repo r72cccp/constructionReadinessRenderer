@@ -1,72 +1,68 @@
 import * as THREE from 'three';
-import { BuildingPrimitive, generateComplexOfBuildings } from './complex-of-buildings-generator';
-import { PointerLockControls } from '../lib/PointerLockControls';
-import { ControlState } from '../lib/controls'
+import { ComplexOfBuildings } from './complex-of-buildings-generator';
+import { PointerLockControls } from '@lib/PointerLockControls';
+import { ControlState } from '@lib/controls';
+import { BuildingPrimitive, Floor, Light } from '@lib/primitives';
+import { physicalConstants } from '@constants/physical';
+import { getPropInSafe } from '@lib/objectUtils';
+
 
 export const sceneInit = (): void => {
   const canvas = document.getElementById('canvas');
   const canvasWidth = canvas.clientWidth;
   const canvasHeight = canvas.clientHeight;
-  const G = 9.8;
-  const spectatorMass = 100; // 100 кг - масса наблюдателя
+  const { G, SpectatorMass } = physicalConstants;
   const scene = new THREE.Scene();
+  scene.position.y = 100;
   scene.background = new THREE.Color(0xccffcc);
-  scene.fog = new THREE.Fog(0xffffff, 0, 3000);
+  // scene.fog = new THREE.Fog(0xffffff, 0, 3000);
   
-  const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
-  light.position.set(500, 500, 500);
+  const light = Light();
   scene.add(light);
+
+  const floor = Floor(1000, 1000);
+  scene.add(floor);
   
-  const camera = new THREE.PerspectiveCamera(75, canvasWidth / canvasHeight, 0.1, 1000);
+  const camera = new THREE.PerspectiveCamera(25, canvasWidth / canvasHeight, 0.1, 10000);
 
   const controls = new PointerLockControls(camera, document.body);
   scene.add(controls.getObject());
+  const objects = ComplexOfBuildings();
+  objects.forEach((object: BuildingPrimitive) => scene.add(object));
+
+  const controlState = new ControlState();
+  controlState.init();
 
   const renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setSize(canvasWidth, canvasHeight);
   canvas.appendChild(renderer.domElement);
-
-  const objects = generateComplexOfBuildings();
-  objects.forEach((object: BuildingPrimitive) => {
-    scene.add(object);
-  });
-  const axesHelper = new THREE.AxesHelper(20);
-  scene.add(axesHelper);
-  const controlState = new ControlState();
-  controlState.init();
   
-  camera.position.y = 20;
-  camera.position.z = 50;
+  camera.position.y = 0;
+  camera.position.z = 200;
   camera.rotation.x = 0.1;
 
   const animate = (): void => {
     requestAnimationFrame(animate);
     controlState.raycaster.ray.origin.copy(controls.getObject().position);
     controlState.raycaster.ray.origin.y -= 10;
-    const intersections = controlState.raycaster.intersectObjects(objects);
-    const onObject = intersections.length > 0;
     const time = performance.now();
+    const speed = controlState.runMode ? 4 : 1;
     const delta = (time - controlState.prevTime) / 1000;
 
-    controlState.velocity.x -= controlState.velocity.x * 10.0 * delta;
-    controlState.velocity.z -= controlState.velocity.z * 10.0 * delta;
+    controlState.velocity.x -= controlState.velocity.x * G * delta;
+    controlState.velocity.z -= controlState.velocity.z * G * delta;
 
-    controlState.velocity.y -= G * spectatorMass * delta;
+    controlState.velocity.y -= G * SpectatorMass * delta;
 
     controlState.direction.z = Number(controlState.moveForward) - Number(controlState.moveBackward);
     controlState.direction.x = Number(controlState.moveRight) - Number(controlState.moveLeft);
-    controlState.direction.normalize(); // обеспечение непрерывности движения во всех направлениях (фикс бага со скачками)
+    controlState.direction.normalize();
 
     if (controlState.moveForward || controlState.moveBackward) controlState.velocity.z -= controlState.direction.z * 400.0 * delta;
     if (controlState.moveLeft || controlState.moveRight) controlState.velocity.x -= controlState.direction.x * 400.0 * delta;
 
-    if (onObject === true) {
-      controlState.velocity.y = Math.max(0, controlState.velocity.y);
-      controlState.canJump = true;
-    };
-
-    controls.moveRight(-controlState.velocity.x * delta);
-    controls.moveForward(-controlState.velocity.z * delta);
+    controls.moveRight(-controlState.velocity.x * delta * speed);
+    controls.moveForward(-controlState.velocity.z * delta * speed);
 
     controls.getObject().position.y += controlState.velocity.y * delta;
 
@@ -77,6 +73,26 @@ export const sceneInit = (): void => {
       controlState.canJump = true;
     };
     controlState.prevTime = time;
+
+    controlState.raycaster.setFromCamera(controlState.mouse, camera);
+    const intersects = controlState.raycaster.intersectObjects(scene.children);
+    if (intersects.length > 0) {
+      let intersectedObject = intersects.find((intersect) => getPropInSafe(intersect, (i) => i.object.material.emissive));
+      if (intersectedObject && controlState.INTERSECTED != intersectedObject.object) {
+        if (controlState.INTERSECTED) {
+          controlState.INTERSECTED.material.emissive.setHex(controlState.INTERSECTED.currentHex);
+        };
+        controlState.INTERSECTED = intersectedObject.object;
+        controlState.INTERSECTED.currentHex = controlState.INTERSECTED.material.emissive.getHex();
+        controlState.INTERSECTED.material.emissive.setHex(0xff0000);
+      };
+    } else {
+      if (controlState.INTERSECTED) {
+        controlState.INTERSECTED.material.emissive.setHex(controlState.INTERSECTED.currentHex);
+      };
+      controlState.INTERSECTED = null;
+    };
+
     renderer.render(scene, camera);
   };
 

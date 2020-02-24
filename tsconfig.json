@@ -1,20 +1,24 @@
 {
 	"compilerOptions": {
-		"target": "es5",
-		"moduleResolution": "node",
 		"module": "ESNext",
-		"outDir": "./dist/",
-		"sourceMap": true,
+		"moduleResolution": "node",
 		"noImplicitAny": false,
+		"outDir": "./dist/",
 		"removeComments": true,
+		"sourceMap": true,
+		"target": "es5",
+    "baseUrl": ".",
 		"lib": [
 			"es6",
 			"es7",
 			"dom"
-		],
-		"baseUrl": ".",
+    ],
+    "paths": {
+      "@constants/*": ["./ts/constants/*"],
+      "@lib/*": ["./ts/lib/*"]
+    }
 	},
 	"include": [
 		"ts/**/*"
-	]
+  ]
 }

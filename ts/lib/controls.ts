@@ -7,36 +7,44 @@ export type ControlStateProps = {
   moveForward?: boolean;
   moveLeft?: boolean;  
   moveRight?: boolean;
+  mouse?: THREE.Vector2;
   prevTime?: number;
   raycaster?: THREE.Raycaster;
+  runMode?: boolean;
   velocity?: THREE.Vector3;
 };
 
 export class ControlState {
-  public moveForward;
+  public canJump;
+  public direction;
+  public INTERSECTED;
   public moveBackward;
+  public moveForward;
   public moveLeft;
   public moveRight;
-  public canJump;
   public prevTime;
-  public velocity;
-  public direction;
   public raycaster;
+  public mouse;
+  public runMode;
+  public velocity;
 
 	constructor(props?: ControlStateProps) {
-    this.moveForward = props && props.moveForward || false;
+    this.canJump = props && props.canJump || false;
+    this.direction = props && props.direction || new THREE.Vector3();
+    this.INTERSECTED = null;
     this.moveBackward = props && props.moveBackward || false;
+    this.moveForward = props && props.moveForward || false;
     this.moveLeft = props && props.moveLeft || false;
     this.moveRight = props && props.moveRight || false;
-    this.canJump = props && props.canJump || false;
     this.prevTime = props && props.prevTime || performance.now();
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+    this.runMode = props && props.runMode || false;
     this.velocity = props && props.velocity || new THREE.Vector3();
-    this.direction = props && props.direction || new THREE.Vector3();
-    this.raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, - 1, 0), 0, 10);
   };
 
-
   private onKeyDown = (event) => {
+    this.runMode = event.shiftKey;
     switch (event.keyCode) {
       case 38: // up
       case 87: // w
@@ -66,6 +74,7 @@ export class ControlState {
   };
 
   private onKeyUp = (event) => {
+    this.runMode = event.shiftKey;
     switch (event.keyCode) {
       case 38: // up
       case 87: // w
@@ -89,8 +98,16 @@ export class ControlState {
     }
   };
 
+  private onMouseMove = (event) => {
+    // Вычисление положения курсора мыши в нормализованных координатах монитора
+    // (от -1 до +1) для обоих компонентов.
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  }    
+
   public init = () => {
-    document.addEventListener( 'keydown', this.onKeyDown, false );
-    document.addEventListener( 'keyup', this.onKeyUp, false );
+    document.addEventListener('mousemove', this.onMouseMove, false);
+    document.addEventListener('keydown', this.onKeyDown, false);
+    document.addEventListener('keyup', this.onKeyUp, false);
   };
 }
