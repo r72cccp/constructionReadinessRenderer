@@ -4,7 +4,8 @@
   "description": "render construction abstract primitive",
   "main": "./dist/main.js",
   "scripts": {
-    "start": "webpack --watch --info-verbosity --progress --colors --bail --env.development verbose",
+    "start": "ng dist/server.ts",
+    "start:dev": "webpack --watch --info-verbosity --progress --colors --bail --env.development verbose",
     "build:prod": "webpack --progress --colors --env.production",
     "build:dev": "webpack --progress --colors --bail --env.development",
     "test": "test"
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/r72cccp/constructionReadinessRenderer#readme",
   "devDependencies": {
+    "terser-webpack-plugin": "^2.3.5",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",
     "webpack": "^4.41.6",
@@ -34,7 +36,5 @@
   "dependencies": {
     "three": "^0.113.2"
   },
-  "engines": {
-    "node": "10.10.0"
-  }
+  "sideEffects": false
 }

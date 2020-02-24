@@ -1,6 +1,6 @@
-import { BuildingPrimitive, Cube, Vertex } from '@lib/primitives';
+import { BuildingPrimitive } from '@lib/primitives';
 import { themeSizes } from '@constants/primitiveSizes';
-
+import { BuildingBlock } from '@entities/buildingBlock';
 
 const { cubeEdgeLength } = themeSizes;
 
@@ -16,14 +16,10 @@ export const ComplexOfBuildings = (): Array<BuildingPrimitive> => {
   
       floors.forEach((sectionFloor, sectionFloorIndex) => {
         const readinessPercent = sectionFloor['Готовность'];
-        const cubePosition: Vertex = {
-          position: {
-            x: positionX + cubeEdgeLength / 2,
-            y: sectionFloorIndex * cubeEdgeLength + cubeEdgeLength / 2,
-            z: cubeEdgeLength / 2,
-          }
-        };
-        const cube = Cube(cubePosition, readinessPercent);
+        const x = positionX + cubeEdgeLength / 2;
+        const y = sectionFloorIndex * cubeEdgeLength + cubeEdgeLength / 2;
+        const z = cubeEdgeLength / 2;
+        const cube = BuildingBlock(readinessPercent, x, y, z);
         objects.push(...cube);
       });
       positionX += cubeEdgeLength;

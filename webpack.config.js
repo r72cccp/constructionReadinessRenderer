@@ -1,10 +1,13 @@
 const path = require('path');
 const alias = require('./webpack.alias');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = function(env) {
   return {
+    entry: [
+      './ts/main.ts',
+    ],
     mode: env.production ? 'production' : 'development',
-    entry: './ts/main.ts',
     module: {
       rules: [
         {
@@ -14,13 +17,19 @@ module.exports = function(env) {
         },
       ],
     },
-    resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ],
-      alias,
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin({
+        
+      })],
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'bundle.js'
-    }
-  }
+      filename: 'bundle.js',
+    },
+    resolve: {
+      alias,
+      extensions: [ '.tsx', '.ts', '.js' ],
+    },
+  };
 };

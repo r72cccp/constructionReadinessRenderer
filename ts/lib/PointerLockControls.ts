@@ -1,4 +1,7 @@
-import * as THREE from 'three';
+import {
+  Euler,
+  Vector3,
+} from '@lib/three';
 import { mathConstants } from '@constants/mathematical';
 
 const { PI_2 } = mathConstants;
@@ -6,8 +9,8 @@ const { PI_2 } = mathConstants;
 export const PointerLockControls = function(camera, domElement) {
 	this.domElement = domElement;
 
-	const euler = new THREE.Euler(0, 0, 0, 'YXZ');
-	const vec = new THREE.Vector3();
+	const euler = new Euler(0, 0, 0, 'YXZ');
+	const vec = new Vector3();
 
 	const onMouseMove = (event) => {
     const buttonPressed = event.buttons === 1;
@@ -38,7 +41,7 @@ export const PointerLockControls = function(camera, domElement) {
 	};
 
 	this.getDirection = () => {
-		var direction = new THREE.Vector3(0, 0, - 1);
+		var direction = new Vector3(0, 0, - 1);
 		return function (v) {
 			return v.copy(direction).applyQuaternion(camera.quaternion);
 		};

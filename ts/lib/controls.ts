@@ -1,17 +1,21 @@
-import * as THREE from 'three';
+import {
+  Raycaster,
+  Vector2,
+  Vector3,
+} from '@lib/three';
 
 export type ControlStateProps = {
   canJump?: boolean;
-  direction?: THREE.Vector3;
+  direction?: Vector3;
   moveBackward?: boolean;
   moveForward?: boolean;
-  moveLeft?: boolean;  
+  moveLeft?: boolean;
   moveRight?: boolean;
-  mouse?: THREE.Vector2;
+  mouse?: Vector2;
   prevTime?: number;
-  raycaster?: THREE.Raycaster;
+  raycaster?: Raycaster;
   runMode?: boolean;
-  velocity?: THREE.Vector3;
+  velocity?: Vector3;
 };
 
 export class ControlState {
@@ -30,17 +34,17 @@ export class ControlState {
 
 	constructor(props?: ControlStateProps) {
     this.canJump = props && props.canJump || false;
-    this.direction = props && props.direction || new THREE.Vector3();
+    this.direction = props && props.direction || new Vector3();
     this.INTERSECTED = null;
     this.moveBackward = props && props.moveBackward || false;
     this.moveForward = props && props.moveForward || false;
     this.moveLeft = props && props.moveLeft || false;
     this.moveRight = props && props.moveRight || false;
     this.prevTime = props && props.prevTime || performance.now();
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
+    this.raycaster = new Raycaster();
+    this.mouse = new Vector2();
     this.runMode = props && props.runMode || false;
-    this.velocity = props && props.velocity || new THREE.Vector3();
+    this.velocity = props && props.velocity || new Vector3();
   };
 
   private onKeyDown = (event) => {
@@ -103,7 +107,7 @@ export class ControlState {
     // (от -1 до +1) для обоих компонентов.
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  }    
+  }
 
   public init = () => {
     document.addEventListener('mousemove', this.onMouseMove, false);

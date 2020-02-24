@@ -1,5 +1,10 @@
-import * as THREE from 'three';
-import { ComplexOfBuildings } from './complex-of-buildings-generator';
+import {
+  Color,
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+} from '@lib/three';
+import { ComplexOfBuildings } from './complexOfBuildingsGenerator';
 import { PointerLockControls } from '@lib/PointerLockControls';
 import { ControlState } from '@lib/controls';
 import { BuildingPrimitive, Floor, Light } from '@lib/primitives';
@@ -12,18 +17,18 @@ export const sceneInit = (): void => {
   const canvasWidth = canvas.clientWidth;
   const canvasHeight = canvas.clientHeight;
   const { G, SpectatorMass } = physicalConstants;
-  const scene = new THREE.Scene();
+  const scene = new Scene();
   scene.position.y = 100;
-  scene.background = new THREE.Color(0xccffcc);
-  // scene.fog = new THREE.Fog(0xffffff, 0, 3000);
-  
+  scene.background = new Color(0xccffcc);
+  // scene.fog = new Fog(0xffffff, 0, 3000);
+
   const light = Light();
   scene.add(light);
 
   const floor = Floor(1000, 1000);
   scene.add(floor);
-  
-  const camera = new THREE.PerspectiveCamera(25, canvasWidth / canvasHeight, 0.1, 10000);
+
+  const camera = new PerspectiveCamera(25, canvasWidth / canvasHeight, 0.1, 10000);
 
   const controls = new PointerLockControls(camera, document.body);
   scene.add(controls.getObject());
@@ -33,13 +38,19 @@ export const sceneInit = (): void => {
   const controlState = new ControlState();
   controlState.init();
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  const renderer = new WebGLRenderer({ alpha: true });
   renderer.setSize(canvasWidth, canvasHeight);
   canvas.appendChild(renderer.domElement);
-  
+
   camera.position.y = 0;
   camera.position.z = 200;
   camera.rotation.x = 0.1;
+  console.log('#43', {
+    canvas,
+    canvasWidth,
+    canvasHeight,
+    camera,
+  });
 
   const animate = (): void => {
     requestAnimationFrame(animate);

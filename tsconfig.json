@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "Node",
 		"noImplicitAny": false,
 		"outDir": "./dist/",
 		"removeComments": true,
@@ -15,6 +15,7 @@
     ],
     "paths": {
       "@constants/*": ["./ts/constants/*"],
+      "@entities/*": ["./ts/entities/*"],
       "@lib/*": ["./ts/lib/*"]
     }
 	},
