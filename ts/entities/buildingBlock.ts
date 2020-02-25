@@ -1,12 +1,9 @@
-import { BuildingPrimitive, Cube, Vertex } from '@lib/primitives';
-import { CSS3DObject } from '@lib/CSS3DRenderer';
+import { BuildingPrimitive, Cube, HTMLBlock, Vertex } from '@lib/primitives';
 import { themeColors } from '@constants/colors';
 import { themeSizes } from '@constants/primitiveSizes';
 import { lastArrayElement } from '@lib/arrayUtils';
-import { mathConstants } from '@constants/mathematical';
 
 
-const { PI_2 } = mathConstants;
 const { cubeEdgeLength } = themeSizes;
 const faceColors: Array<number> = themeColors.readinessColors;
 const getBuildingBlockColor = (readinessPercent: number): number => {
@@ -20,22 +17,24 @@ const getBuildingBlockColor = (readinessPercent: number): number => {
 };
 
 
-export const BuildingBlock = (readinessPercent: number, x: number, y: number, z: number): Array<BuildingPrimitive> => {
-  const cubePosition: Vertex = {
-    position: { x, y, z },
-  };
+export const BuildingBlock = (readinessPercent: number, cubePosition: Vertex): Array<BuildingPrimitive> => {
   const color = getBuildingBlockColor(readinessPercent)
   const cube = Cube(cubePosition, color);
-  const faceTexture = document.createElement('div');
-  const readinessPercentBlock = document.createElement('div');
-  readinessPercentBlock.textContent = `${readinessPercent}%`;
-  readinessPercentBlock.className = 'face-texture';
-  faceTexture.appendChild(readinessPercentBlock);
 
-  const faceHTMLObject = new CSS3DObject(faceTexture);
-  faceHTMLObject.position.x = x;
-  faceHTMLObject.position.y = y;
-  faceHTMLObject.position.z = z + cubeEdgeLength / 2;
+  const faceTexture = document.createElement('div');
+  faceTexture.textContent = `${readinessPercent}%`;
+  faceTexture.className = 'face-texture';
+
+  const textPosition: Vertex = {
+    position: {
+      ...cubePosition.position,
+      z: cubePosition.position.z + cubeEdgeLength / 2,
+    },
+    rotation: {
+      ...cubePosition.rotation,
+    }
+  };
+  const faceHTMLObject = HTMLBlock(textPosition, faceTexture);
   cube.push(faceHTMLObject);
 
   return cube;

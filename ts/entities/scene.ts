@@ -9,8 +9,8 @@ import { PointerLockControls } from '@lib/PointerLockControls';
 import { ControlState } from '@lib/controls';
 import { BuildingPrimitive, Floor, Light } from '@lib/primitives';
 import { physicalConstants } from '@constants/physical';
-import { getPropInSafe } from '@lib/objectUtils';
 import { CSS3DRenderer } from '@lib/CSS3DRenderer';
+import { getPropInSafe } from '@lib/objectUtils';
 
 
 export const sceneInit = (): void => {
@@ -43,20 +43,12 @@ export const sceneInit = (): void => {
   renderer.setSize(canvasWidth, canvasHeight);
   canvas.appendChild(renderer.domElement);
 
-  // const htmlRenderer = new CSS3DRenderer();
-  // htmlRenderer.setSize(canvasWidth, canvasHeight);
-  // document.getElementById('css-3d-container').appendChild(htmlRenderer.domElement);
-
   const css3DRenderer = new CSS3DRenderer();
   css3DRenderer.setSize(canvasWidth, canvasHeight);
   css3DRenderer.domElement.style.position = 'absolute';
   css3DRenderer.domElement.style.top = '0';
   css3DRenderer.domElement.style.left = '0';
   canvas.appendChild(css3DRenderer.domElement);
-
-  // console.log('#50', {
-  //   htmlRenderer,
-  // });
 
   camera.position.y = 0;
   camera.position.z = 200;

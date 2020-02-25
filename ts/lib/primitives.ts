@@ -33,9 +33,14 @@ export type Rotation = {
   rz?: number;
 };
 
-export type Vertex = {
-  position?: Position;
-  rotation?: Rotation;
+export class Vertex {
+  public position?: Position;
+  public rotation?: Rotation;
+
+  constructor(x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
+    this.position = { x, y, z };
+    this.rotation = { rx, ry, rz };
+  };
 };
 
 export const Floor = (width: number, length: number) => {
@@ -68,4 +73,19 @@ export const Cube = (objectPosition: Vertex, color: number): Array<BuildingPrimi
   objectPosition.position && line.position.set(x, y, z);
   objectPosition.rotation && line.rotation.set(rx, ry, rz);
   return [cube, line];
+};
+
+export const HTMLBlock = (objectPosition: Vertex, htmlDOMElement): BuildingPrimitive => {
+  const { x, y, z } = objectPosition.position || {};
+  const { rx, ry, rz } = objectPosition.rotation || {};
+  
+  const faceHTMLObject = new CSS3DObject(htmlDOMElement);
+  faceHTMLObject.position.x = x;
+  faceHTMLObject.position.y = y;
+  faceHTMLObject.position.z = z;
+  faceHTMLObject.rotation.x = rx;
+  faceHTMLObject.rotation.y = ry;
+  faceHTMLObject.rotation.z = rz;
+
+  return faceHTMLObject;
 };

@@ -42,8 +42,6 @@
 
 /*! exports provided: Float64BufferAttribute, Float32BufferAttribute, Uint32BufferAttribute, Int32BufferAttribute, Uint16BufferAttribute, Int16BufferAttribute, Uint8ClampedBufferAttribute, Uint8BufferAttribute, Int8BufferAttribute, BufferAttribute */
 
-/*! exports provided: Floor, Light, axesHelper, Cube */
-
 /*! exports provided: Frustum */
 
 /*! exports provided: Geometry */
@@ -121,6 +119,8 @@
 /*! exports provided: Vector3 */
 
 /*! exports provided: Vector4 */
+
+/*! exports provided: Vertex, Floor, Light, axesHelper, Cube, HTMLBlock */
 
 /*! exports provided: WebGLAnimation */
 

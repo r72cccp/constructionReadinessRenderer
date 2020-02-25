@@ -1,4 +1,4 @@
-import { BuildingPrimitive } from '@lib/primitives';
+import { BuildingPrimitive, HTMLBlock, Vertex } from '@lib/primitives';
 import { themeSizes } from '@constants/primitiveSizes';
 import { BuildingBlock } from '@entities/buildingBlock';
 
@@ -11,19 +11,32 @@ export const ComplexOfBuildings = (): Array<BuildingPrimitive> => {
 
   constructionReadinessData.forEach((complexOfBuildings) => {
     const sections = complexOfBuildings['СтруктураСекций'];
+    let buildingMaximumSectionHeight = 0;
     sections.forEach((section) => {
       const floors = section['СтруктураЭтажей'];
-  
+      if (floors.length > buildingMaximumSectionHeight) buildingMaximumSectionHeight = floors.length;
       floors.forEach((sectionFloor, sectionFloorIndex) => {
         const readinessPercent = sectionFloor['Готовность'];
         const x = positionX + cubeEdgeLength / 2;
         const y = sectionFloorIndex * cubeEdgeLength + cubeEdgeLength / 2;
         const z = cubeEdgeLength / 2;
-        const cube = BuildingBlock(readinessPercent, x, y, z);
+        const buildingBlockPosition = new Vertex(x, y, z);
+        const cube = BuildingBlock(readinessPercent, buildingBlockPosition);
         objects.push(...cube);
       });
       positionX += cubeEdgeLength;
     });
+
+    const buildingMiddle = positionX + (sections.length * cubeEdgeLength) / 2;
+    const buildingTop = buildingMaximumSectionHeight * (cubeEdgeLength + 2);
+
+    const faceTexture = document.createElement('div');
+    faceTexture.textContent = complexOfBuildings['Проект'];
+    faceTexture.className = 'building-annotation';
+    const buildingAnnotationPosition = new Vertex(buildingMiddle, buildingTop, cubeEdgeLength / 2);
+    const buildingAnnotation = HTMLBlock(buildingAnnotationPosition, faceTexture);
+    objects.unshift(buildingAnnotation);
+
     positionX += cubeEdgeLength;
   });
   return objects;

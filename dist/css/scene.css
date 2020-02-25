@@ -16,6 +16,18 @@ html, body, .canvas {
   font-size: 4px;
   pointer-events: none !important;
 }
+.building-annotation {
+  background-color: transparent;
+  color: black;
+  font-size: 8px;
+  width: 100px;
+  max-height: 200px;
+  margin-left: -97px;
+  pointer-events: none !important;
+  background-color: gainsboro;
+  padding: 2px;
+  border: 1px solid white;
+}
 .floatLabel {
   position: absolute;
 }
