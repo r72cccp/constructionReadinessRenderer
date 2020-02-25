@@ -1,11 +1,13 @@
 import { BuildingPrimitive, Cube, Vertex } from '@lib/primitives';
 import { CSS3DObject } from '@lib/CSS3DRenderer';
 import { themeColors } from '@constants/colors';
+import { themeSizes } from '@constants/primitiveSizes';
 import { lastArrayElement } from '@lib/arrayUtils';
 import { mathConstants } from '@constants/mathematical';
 
 
 const { PI_2 } = mathConstants;
+const { cubeEdgeLength } = themeSizes;
 const faceColors: Array<number> = themeColors.readinessColors;
 const getBuildingBlockColor = (readinessPercent: number): number => {
   if (readinessPercent <= 0) return faceColors[0];
@@ -24,45 +26,17 @@ export const BuildingBlock = (readinessPercent: number, x: number, y: number, z:
   };
   const color = getBuildingBlockColor(readinessPercent)
   const cube = Cube(cubePosition, color);
-  // const faceTexture = document.createElement('div');
-  // const readinessPercentBlock = document.createElement('div');
-  // readinessPercentBlock.textContent = `${readinessPercent}%`;
-  // readinessPercentBlock.style.backgroundColor = 'yellow';
-  // readinessPercentBlock.style.color = 'crimson';
-  // faceTexture.appendChild(readinessPercentBlock);
+  const faceTexture = document.createElement('div');
+  const readinessPercentBlock = document.createElement('div');
+  readinessPercentBlock.textContent = `${readinessPercent}%`;
+  readinessPercentBlock.className = 'face-texture';
+  faceTexture.appendChild(readinessPercentBlock);
 
-  // const faceHTMLObject = new CSS3DObject(faceTexture);
-  // faceHTMLObject.rotation.x = -PI_2;
-  // faceHTMLObject.position.x = x + 100;
-  // faceHTMLObject.position.y = y + 100;
-  // faceHTMLObject.position.z = z + 10;
-  // cube.push(faceHTMLObject);
-
-  var element = document.createElement( 'div' );
-  element.className = 'element';
-  element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
-
-  var number = document.createElement( 'div' );
-  number.className = 'number';
-  number.textContent = `${readinessPercent}%`;
-  element.appendChild( number );
-
-  var symbol = document.createElement( 'div' );
-  symbol.className = 'symbol';
-  symbol.textContent = 'test 52';
-  element.appendChild( symbol );
-
-  var details = document.createElement( 'div' );
-  details.className = 'details';
-  details.innerHTML = 'test57' + '<br>' + 'testolooloolool';
-  element.appendChild( details );
-
-  var object = new CSS3DObject( element );
-  object.position.x = Math.random() * 4000 - 2000;
-  object.position.y = Math.random() * 4000 - 2000;
-  object.position.z = Math.random() * 4000 - 2000;
-  cube.push( object );
-
+  const faceHTMLObject = new CSS3DObject(faceTexture);
+  faceHTMLObject.position.x = x;
+  faceHTMLObject.position.y = y;
+  faceHTMLObject.position.z = z + cubeEdgeLength / 2;
+  cube.push(faceHTMLObject);
 
   return cube;
 };

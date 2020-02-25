@@ -10,6 +10,12 @@ html, body, .canvas {
   height: 100%;
   overflow: hidden;
 }
+.face-texture {
+  background-color: transparent;
+  color: yellow;
+  font-size: 4px;
+  pointer-events: none !important;
+}
 .floatLabel {
   position: absolute;
 }
