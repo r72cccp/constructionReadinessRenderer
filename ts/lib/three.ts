@@ -7,6 +7,7 @@ import { Camera } from 'three/src/cameras/Camera';
 import { Color } from 'three/src/math/Color';
 import { EdgesGeometry } from 'three/src/geometries/EdgesGeometry';
 import { Euler } from 'three/src/math/Euler';
+import { Group } from 'three/src/objects/Group';
 import { HemisphereLight } from 'three/src/lights/HemisphereLight';
 import { LineBasicMaterial } from 'three/src/materials/LineBasicMaterial';
 import { LineSegments } from 'three/src/objects/LineSegments';
@@ -30,6 +31,7 @@ export {
   Color,
   EdgesGeometry,
   Euler,
+  Group,
   HemisphereLight,
   LineBasicMaterial,
   LineSegments,

@@ -1,21 +1,17 @@
-import {
-  Raycaster,
-  Vector2,
-  Vector3,
-} from '@lib/three';
+import * as THREE from '@lib/three';
 
 export type ControlStateProps = {
   canJump?: boolean;
-  direction?: Vector3;
+  direction?: THREE.Vector3;
   moveBackward?: boolean;
   moveForward?: boolean;
   moveLeft?: boolean;
   moveRight?: boolean;
-  mouse?: Vector2;
+  mouse?: THREE.Vector2;
   prevTime?: number;
-  raycaster?: Raycaster;
+  raycaster?: THREE.Raycaster;
   runMode?: boolean;
-  velocity?: Vector3;
+  velocity?: THREE.Vector3;
 };
 
 export class ControlState {
@@ -34,17 +30,17 @@ export class ControlState {
 
 	constructor(props?: ControlStateProps) {
     this.canJump = props && props.canJump || false;
-    this.direction = props && props.direction || new Vector3();
+    this.direction = props && props.direction || new THREE.Vector3();
     this.INTERSECTED = null;
     this.moveBackward = props && props.moveBackward || false;
     this.moveForward = props && props.moveForward || false;
     this.moveLeft = props && props.moveLeft || false;
     this.moveRight = props && props.moveRight || false;
     this.prevTime = props && props.prevTime || performance.now();
-    this.raycaster = new Raycaster();
-    this.mouse = new Vector2();
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
     this.runMode = props && props.runMode || false;
-    this.velocity = props && props.velocity || new Vector3();
+    this.velocity = props && props.velocity || new THREE.Vector3();
   };
 
   private onKeyDown = (event) => {

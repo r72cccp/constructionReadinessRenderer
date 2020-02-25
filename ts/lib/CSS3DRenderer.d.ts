@@ -1,16 +1,12 @@
-import {
-  Object3D,
-  Scene,
-  Camera,
-} from '@lib/three';
+import * as THREE from '@lib/three';
 
-export class CSS3DObject extends Object3D {
+export class CSS3DObject extends THREE.Object3D {
 
 	constructor( element: HTMLElement );
 	element: HTMLElement;
 
-	onBeforeRender: ( renderer: unknown, scene: Scene, camera: Camera ) => void;
-	onAfterRender: ( renderer: unknown, scene: Scene, camera: Camera ) => void;
+	onBeforeRender: ( renderer: unknown, scene: THREE.Scene, camera: THREE.Camera ) => void;
+	onAfterRender: ( renderer: unknown, scene: THREE.Scene, camera: THREE.Camera ) => void;
 
 }
 
@@ -27,6 +23,6 @@ export class CSS3DRenderer {
 
 	getSize(): { width: number, height: number };
 	setSize( width: number, height: number ): void;
-	render( scene: Scene, camera: Camera ): void;
+	render( scene: THREE.Scene, camera: THREE.Camera ): void;
 
 }

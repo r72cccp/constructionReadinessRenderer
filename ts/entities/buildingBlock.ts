@@ -1,7 +1,8 @@
-import { BuildingPrimitive, Cube, HTMLBlock, Vertex } from '@lib/primitives';
+import { Cube, HTMLBlock, Vertex } from '@lib/primitives';
 import { themeColors } from '@constants/colors';
 import { themeSizes } from '@constants/primitiveSizes';
 import { lastArrayElement } from '@lib/arrayUtils';
+import * as THREE from '@lib/three';
 
 
 const { cubeEdgeLength } = themeSizes;
@@ -17,25 +18,18 @@ const getBuildingBlockColor = (readinessPercent: number): number => {
 };
 
 
-export const BuildingBlock = (readinessPercent: number, cubePosition: Vertex): Array<BuildingPrimitive> => {
+export const BuildingBlock = (readinessPercent: number, cubePosition: Vertex): THREE.Group => {
   const color = getBuildingBlockColor(readinessPercent)
-  const cube = Cube(cubePosition, color);
+  const cube = new Cube(cubePosition, color);
 
   const faceTexture = document.createElement('div');
-  faceTexture.textContent = `${readinessPercent}%`;
+  faceTexture.textContent = `${readinessPercent.toFixed(2)}%`;
   faceTexture.className = 'face-texture';
 
-  const textPosition: Vertex = {
-    position: {
-      ...cubePosition.position,
-      z: cubePosition.position.z + cubeEdgeLength / 2,
-    },
-    rotation: {
-      ...cubePosition.rotation,
-    }
-  };
-  const faceHTMLObject = HTMLBlock(textPosition, faceTexture);
-  cube.push(faceHTMLObject);
+  const textPosition = { ...cubePosition };
+  textPosition.position.z = cubePosition.position.z + cubeEdgeLength / 2;
+  const faceHTMLObject = new HTMLBlock(textPosition, faceTexture);
+  cube.add(faceHTMLObject);
 
   return cube;
 };

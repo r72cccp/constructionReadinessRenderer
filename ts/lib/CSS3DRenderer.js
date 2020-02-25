@@ -4,11 +4,11 @@
  * @author yomotsu / https://yomotsu.net/
  */
 
-import { Matrix4, Object3D, Vector3 } from '@lib/three';
+import * as THREE from '@lib/three';
 
 var CSS3DObject = function ( element ) {
 
-	Object3D.call( this );
+	THREE.Object3D.call( this );
 	this.element = element;
 	this.element.style.position = 'absolute';
 	this.element.style.pointerEvents = 'auto';
@@ -29,7 +29,7 @@ var CSS3DObject = function ( element ) {
 
 };
 
-CSS3DObject.prototype = Object.create( Object3D.prototype );
+CSS3DObject.prototype = Object.create( THREE.Object3D.prototype );
 CSS3DObject.prototype.constructor = CSS3DObject;
 
 var CSS3DSprite = function ( element ) {
@@ -50,7 +50,7 @@ var CSS3DRenderer = function () {
 	var _width, _height;
 	var _widthHalf, _heightHalf;
 
-	var matrix = new Matrix4();
+	var matrix = new THREE.Matrix4();
 
 	var cache = {
 		camera: { fov: 0, style: '' },
@@ -232,8 +232,8 @@ var CSS3DRenderer = function () {
 
 	var getDistanceToSquared = function () {
 
-		var a = new Vector3();
-		var b = new Vector3();
+		var a = new THREE.Vector3();
+		var b = new THREE.Vector3();
 
 		return function ( object1, object2 ) {
 
