@@ -14,6 +14,8 @@
 
 https://codepen.io/SergioBelevskij/pen/NWqrZJJ?editable=true
 
+https://r72cccp.github.io/constructionReadinessRenderer/index.html
+
 ## <a name="data_example">Пример вводных данных:</a>
 
   образец JSON лежит [тут](./guide/jsonExample.md)
