@@ -45,12 +45,6 @@ export const sceneInit = (): void => {
   camera.position.y = 0;
   camera.position.z = 200;
   camera.rotation.x = 0.1;
-  console.log('#43', {
-    canvas,
-    canvasWidth,
-    canvasHeight,
-    camera,
-  });
 
   const animate = (): void => {
     requestAnimationFrame(animate);

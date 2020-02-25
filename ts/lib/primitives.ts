@@ -13,23 +13,11 @@ import {
 import { CSS3DObject } from '@lib/CSS3DRenderer';
 import { themeColors } from '@constants/colors';
 import { themeSizes } from '@constants/primitiveSizes';
-import { lastArrayElement } from '@lib/arrayUtils';
 import { mathConstants } from '@constants/mathematical';
 
 const { PI_2 } = mathConstants;
-const faceColors: Array<number> = themeColors.readinessColors;
 const { cubeEdgeLength } = themeSizes;
 const cubeGeometry = new BoxBufferGeometry(cubeEdgeLength, cubeEdgeLength, cubeEdgeLength);
-
-const getFaceColor = (readinessPercent: number): number => {
-  if (readinessPercent <= 0) return faceColors[0];
-  if (readinessPercent === 100) return lastArrayElement(faceColors);
-  const middleColorsCount = faceColors.length - 2;
-  const colorIndex = Math.floor(readinessPercent / 100 * middleColorsCount) + 1;
-  if (colorIndex < 1) return faceColors[1];
-  if (colorIndex > faceColors.length - 1) return faceColors[faceColors.length - 1];
-  return faceColors[colorIndex];
-};
 
 export type BuildingPrimitive = Mesh | LineSegments | CSS3DObject;
 
@@ -68,8 +56,8 @@ export const axesHelper = (size = 20) => {
   return new AxesHelper(size);
 };
 
-export const Cube = (objectPosition: Vertex, readinessPercent: number): Array<BuildingPrimitive> => {
-  const material = new MeshLambertMaterial({ color: getFaceColor(readinessPercent) });
+export const Cube = (objectPosition: Vertex, color: number): Array<BuildingPrimitive> => {
+  const material = new MeshLambertMaterial({ color });
   const cube = new Mesh(cubeGeometry, material);
   const { x, y, z } = objectPosition.position || {};
   const { rx, ry, rz } = objectPosition.rotation || {};

@@ -4,16 +4,11 @@
  * @author yomotsu / https://yomotsu.net/
  */
 
-import {
-  Matrix4,
-  Object3D,
-  Vector3,
-} from '@lib/three';
+import { Matrix4, Object3D, Vector3 } from '@lib/three';
 
 var CSS3DObject = function ( element ) {
 
 	Object3D.call( this );
-
 	this.element = element;
 	this.element.style.position = 'absolute';
 	this.element.style.pointerEvents = 'auto';
