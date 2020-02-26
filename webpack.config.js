@@ -5,7 +5,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = function(env) {
   return {
     entry: [
-      './ts/main.ts',
+      './src/main.ts',
     ],
     mode: env.production ? 'production' : 'development',
     module: {
@@ -14,6 +14,26 @@ module.exports = function(env) {
           test: /\.tsx?$/,
           use: 'ts-loader',
           exclude: /node_modules/,
+        },
+        {
+          test: /\.less$/,
+          use: [
+            {
+              loader: 'style-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+              },
+            },            
+            {
+              loader: 'less-loader',
+              options: {
+                sourceMap: true,
+              },
+            }
+          ]
         },
       ],
     },
@@ -24,12 +44,12 @@ module.exports = function(env) {
       })],
     },
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'dist/js'),
       filename: 'bundle.js',
     },
     resolve: {
       alias,
-      extensions: [ '.tsx', '.ts', '.js' ],
+      extensions: [ '.tsx', '.ts', '.js', '.less' ],
     },
   };
 };

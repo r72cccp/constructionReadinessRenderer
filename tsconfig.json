@@ -14,12 +14,9 @@
 			"dom"
     ],
     "paths": {
-      "@constants/*": ["./ts/constants/*"],
-      "@entities/*": ["./ts/entities/*"],
-      "@lib/*": ["./ts/lib/*"]
+      "@constants/*": ["./src/constants/*"],
+      "@entities/*": ["./src/entities/*"],
+      "@lib/*": ["./src/lib/*"]
     }
-	},
-	"include": [
-		"ts/**/*"
-  ]
+	}
 }
