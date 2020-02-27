@@ -106,6 +106,7 @@ export class ControlState {
     // (от -1 до +1) для обоих компонентов.
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    this.logger.log(`this.mouse.x: '${this.mouse.x}', this.mouse.y: '${this.mouse.y}'`)
   };
 
   public init = () => {

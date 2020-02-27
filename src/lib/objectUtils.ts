@@ -1,4 +1,4 @@
-export const getPropInSafe = <SourceObject, Result>(
+export const getPropInSafe = <SourceObject extends Object, Result>(
   object: SourceObject,
   resultReader: (x: SourceObject) => Result,
   replacer: any = undefined

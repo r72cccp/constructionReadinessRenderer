@@ -13,8 +13,8 @@ export const sceneInit = (): void => {
   const logger = new Logger();
   logger.log('Begin scene initialization');
   const canvas = document.getElementById('canvas');
-  const canvasWidth = canvas.clientWidth;
-  const canvasHeight = canvas.clientHeight;
+  let canvasWidth = canvas.clientWidth;
+  let canvasHeight = canvas.clientHeight;
   const { G, SpectatorMass } = physicalConstants;
   const scene = new THREE.Scene();
   scene.position.y = 100;
@@ -42,9 +42,9 @@ export const sceneInit = (): void => {
   controlState.init();
   logger.log(' - controls added.');
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setSize(canvasWidth, canvasHeight);
-  canvas.appendChild(renderer.domElement);
+  const webGLRenderer = new THREE.WebGLRenderer({ alpha: true });
+  webGLRenderer.setSize(canvasWidth, canvasHeight);
+  canvas.appendChild(webGLRenderer.domElement);
   logger.log(' - WebGLRenderer added.');
 
   const css3DRenderer = new CSS3DRenderer();
@@ -55,6 +55,17 @@ export const sceneInit = (): void => {
   canvas.appendChild(css3DRenderer.domElement);
   logger.log(' - CSS3DRenderer added.');
 
+  const canvasResize = (): void => {
+    const canvas = document.getElementById('canvas');
+    canvasWidth = canvas.clientWidth;
+    canvasHeight = canvas.clientHeight;
+    camera.aspect = canvasWidth / canvasHeight;
+    camera.updateProjectionMatrix();
+
+    webGLRenderer.setSize(canvasWidth, canvasHeight);
+    css3DRenderer.setSize(canvasWidth, canvasHeight);
+  };
+
   camera.position.y = 0;
   camera.position.z = 200;
   camera.rotation.x = 0.1;
@@ -62,10 +73,13 @@ export const sceneInit = (): void => {
   logger.log('Begin animation cycle');
   let animationFrameIndex = 0;
   const animationFrameStartTime = Date.now();
+
+  window.addEventListener('resize', canvasResize, false);
+
   const animate = (): void => {
     animationFrameIndex++;
     const averageFps = Math.floor(animationFrameIndex / (Date.now() - animationFrameStartTime) * 1000);
-    logger.log(`- animation #${animationFrameIndex} fps: ${averageFps}`);
+    // logger.log(`- animation #${animationFrameIndex} fps: ${averageFps}`);
     requestAnimationFrame(animate);
     controlState.raycaster.ray.origin.copy(controls.getObject().position);
     controlState.raycaster.ray.origin.y -= 10;
@@ -118,7 +132,7 @@ export const sceneInit = (): void => {
     };
 
     css3DRenderer.render(scene, camera);
-    renderer.render(scene, camera);
+    webGLRenderer.render(scene, camera);
   };
 
   animate();

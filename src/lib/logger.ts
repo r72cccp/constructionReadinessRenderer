@@ -5,6 +5,7 @@ export class Logger {
   private paused: boolean;
   private disabled: boolean;
   private MAX_MESSAGE_COUNT = 100;
+  private pauseButton: HTMLElement;
 
   constructor(elementId = 'logger', maxMessageCount?: number) {
     if (Logger.exists) {
@@ -29,20 +30,25 @@ export class Logger {
     loggerWrapper.className = 'logger';
     const loggerContainer = document.createElement('div');
     loggerContainer.className = 'logger--container';
-    const pauseButton = document.createElement('div');
-    pauseButton.className = 'logger--pause-button';
-    pauseButton.textContent = 'pause';
-    pauseButton.onclick = () => {
+    this.pauseButton = document.createElement('div');
+    this.pauseButton.className = 'logger--pause-button';
+    this.pauseButton.textContent = 'Pause';
+    this.pauseButton.onclick = () => {
       this.toggleLogger();
     };
     loggerWrapper.appendChild(loggerContainer);
-    loggerWrapper.appendChild(pauseButton);
+    loggerWrapper.appendChild(this.pauseButton);
     this.stdout = loggerContainer;
   };
 
   private toggleLogger() {
     this.paused = !this.paused;
-  }
+    if (this.paused) {
+      this.pauseButton.textContent = 'Continue';
+    } else {
+      this.pauseButton.textContent = 'Pause';
+    };
+  };
 
   private pushToStdOut(element: HTMLElement): void {
     this.stdout.appendChild(element);
