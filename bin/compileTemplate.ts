@@ -62,4 +62,5 @@ Promise.all(promiseReads).then(([jsonText, cssText, bundleJsText, indexText]) =>
     .replace(/<link id="cssLink".+?\/>/, `<style>${cssText}</style>`)
     .replace(/<script id="jsScript".+?<\/script>/, `<script>${bundleJsText}</script>`);
     writeFile('../index1C.html', indexHtmlTextFor1C);
-  });
+    writeFile('../index1CForDebug.html', indexHtmlTextFor1C.replace('{jsonAnchor}', jsonText));
+});

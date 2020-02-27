@@ -6,9 +6,12 @@ import { Floor, Light } from '@lib/primitives';
 import { physicalConstants } from '@constants/physical';
 import { CSS3DRenderer } from '@lib/CSS3DRenderer';
 import { getPropInSafe } from '@lib/objectUtils';
+import { Logger } from '@lib/logger';
 
 
 export const sceneInit = (): void => {
+  const logger = new Logger();
+  logger.log('Begin scene initialization');
   const canvas = document.getElementById('canvas');
   const canvasWidth = canvas.clientWidth;
   const canvasHeight = canvas.clientHeight;
@@ -20,9 +23,11 @@ export const sceneInit = (): void => {
 
   const light = new Light();
   scene.add(light);
+  logger.log(' - light added.');
 
   const floor = new Floor(10000, 10000);
   scene.add(floor);
+  logger.log(' - floor added.');
 
   const camera = new THREE.PerspectiveCamera(25, canvasWidth / canvasHeight, 0.1, 10000);
 
@@ -30,13 +35,17 @@ export const sceneInit = (): void => {
   scene.add(controls.getObject());
   const complexOfBuildingObjects = ComplexOfBuildings();
   scene.add(complexOfBuildingObjects);
+  logger.log(' - buildings added.');
+
 
   const controlState = new ControlState();
   controlState.init();
+  logger.log(' - controls added.');
 
   const renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setSize(canvasWidth, canvasHeight);
   canvas.appendChild(renderer.domElement);
+  logger.log(' - WebGLRenderer added.');
 
   const css3DRenderer = new CSS3DRenderer();
   css3DRenderer.setSize(canvasWidth, canvasHeight);
@@ -44,12 +53,19 @@ export const sceneInit = (): void => {
   css3DRenderer.domElement.style.top = '0';
   css3DRenderer.domElement.style.left = '0';
   canvas.appendChild(css3DRenderer.domElement);
+  logger.log(' - CSS3DRenderer added.');
 
   camera.position.y = 0;
   camera.position.z = 200;
   camera.rotation.x = 0.1;
-
+  logger.log(' - camera position initialized.');
+  logger.log('Begin animation cycle');
+  let animationFrameIndex = 0;
+  const animationFrameStartTime = Date.now();
   const animate = (): void => {
+    animationFrameIndex++;
+    const averageFps = Math.floor(animationFrameIndex / (Date.now() - animationFrameStartTime) * 1000);
+    logger.log(`- animation #${animationFrameIndex} fps: ${averageFps}`);
     requestAnimationFrame(animate);
     controlState.raycaster.ray.origin.copy(controls.getObject().position);
     controlState.raycaster.ray.origin.y -= 10;

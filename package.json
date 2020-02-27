@@ -7,7 +7,8 @@
     "less": "lessc ./src/stylesheets/index.less ./dist/css/scene.css",
     "start:dev": "webpack --watch --info-verbosity --progress --colors --bail --env.development verbose",
     "bin:compile": "tsc ./bin/compileTemplate.ts",
-    "build:html": "npm run less && npm run build:prod && node ./bin/compileTemplate.js",
+    "compile:html": "node ./bin/compileTemplate.js",
+    "build:html": "npm run less && npm run build:prod && npm run compile:html",
     "build:prod": "webpack --progress --colors --env.production",
     "build:dev": "webpack --progress --colors --bail --env.development"
   },

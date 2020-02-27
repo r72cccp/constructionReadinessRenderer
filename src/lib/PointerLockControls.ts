@@ -1,7 +1,9 @@
 import * as THREE from '@lib/three';
 import { mathConstants } from '@constants/mathematical';
+import { Logger } from '@lib/logger';
 
 const { PI_2 } = mathConstants;
+const logger = new Logger();
 
 export const PointerLockControls = function(camera, domElement) {
 	this.domElement = domElement;

@@ -10,6 +10,48 @@ html, body, .canvas {
   height: 100%;
   overflow: hidden;
 }
+.logger {
+  position: fixed;
+  right: 50px;
+  top: 10px;
+  width: 30%;
+  height: 50%;
+  
+  &--pause-button {
+    position: fixed;
+    top: 233px;
+    right: 28px;
+    padding: 4px 16px;
+    border-radius: 4px;
+    color: white;
+    border-color: lightgreen;
+    background-color: green;
+
+    &:hover {
+      background-color: lightgreen;
+      color: black;
+      cursor: pointer;
+    }
+  }
+
+  &--container {
+    position: relative;
+    overflow-y: scroll;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    background-color: burlywood;
+    opacity: 0.5;
+    color: black;
+    border: 2px solid black;
+
+    &--item {
+      font-size: 12px;
+      color: black;
+      padding: 4px;
+    }
+  }
+}
 .face-texture {
   background-color: transparent;
   color: yellow;

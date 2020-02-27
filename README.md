@@ -37,7 +37,7 @@ https://r72cccp.github.io/constructionReadinessRenderer/index.html
 
 ## <a name="embedding_example">Как это встраивать на страницу</a>
 
-  * Копируете HTML разметку из файла [dist/template.html](./dist/template.html) как строку;
+  * Копируете HTML разметку из файла [index1C.html](./index1C.html) как строку;
   * Заменяете в строке сигнатуру `{jsonAnchor}` на свой json (`[{...}]`);
   * Вставляете в 1С документ;
 

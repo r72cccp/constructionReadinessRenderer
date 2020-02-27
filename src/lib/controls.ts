@@ -1,4 +1,5 @@
 import * as THREE from '@lib/three';
+import { Logger } from '@lib/logger';
 
 export type ControlStateProps = {
   canJump?: boolean;
@@ -18,6 +19,7 @@ export class ControlState {
   public canJump;
   public direction;
   public INTERSECTED;
+  private logger: Logger;
   public moveBackward;
   public moveForward;
   public moveLeft;
@@ -32,6 +34,7 @@ export class ControlState {
     this.canJump = props && props.canJump || false;
     this.direction = props && props.direction || new THREE.Vector3();
     this.INTERSECTED = null;
+    this.logger = new Logger();
     this.moveBackward = props && props.moveBackward || false;
     this.moveForward = props && props.moveForward || false;
     this.moveLeft = props && props.moveLeft || false;
@@ -103,7 +106,7 @@ export class ControlState {
     // (от -1 до +1) для обоих компонентов.
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  }
+  };
 
   public init = () => {
     document.addEventListener('mousemove', this.onMouseMove, false);
