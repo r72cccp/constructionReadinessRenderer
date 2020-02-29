@@ -42,6 +42,10 @@ const readJson = (): Promise<string> => {
   return readFile('../src/build/sampleData.json', (contents) => JSON.stringify(JSON.parse(contents)));
 };
 
+const readFontJson = (): Promise<string> => {
+  return readFile('../src/build/helvetiker_regular.typeface.json', (contents) => JSON.stringify(JSON.parse(contents)));
+};
+
 const readCss = (): Promise<string> => {
   return readFile('../dist/css/scene.css', (contents) => minifyCssString(contents));
 };
@@ -54,9 +58,11 @@ const readIndex = (): Promise<string> => {
   return readFile('../src/build/indexTemplate.html');
 };
 
-const promiseReads = [readJson(), readCss(), readBundleJs(), readIndex()];
-Promise.all(promiseReads).then(([jsonText, cssText, bundleJsText, indexText]) => {
-  const indexHtmlText = indexText.replace('{jsonAnchor}', jsonText);
+const promiseReads = [readJson(), readCss(), readBundleJs(), readIndex(), readFontJson()];
+Promise.all(promiseReads).then(([jsonText, cssText, bundleJsText, indexText, fontJsonText]) => {
+  const indexHtmlText = indexText
+    .replace('{jsonAnchor}', jsonText)
+    .replace('{fontAnchor}', fontJsonText);
   writeFile('../index.html', indexHtmlText);
   const indexHtmlTextFor1C = indexText
     .replace(/<link id="cssLink".+?\/>/, `<style>${cssText}</style>`)

@@ -40,6 +40,9 @@ var writeFile = function (filePath, content) {
 var readJson = function () {
     return readFile('../src/build/sampleData.json', function (contents) { return JSON.stringify(JSON.parse(contents)); });
 };
+var readFontJson = function () {
+    return readFile('../src/build/helvetiker_regular.typeface.json', function (contents) { return JSON.stringify(JSON.parse(contents)); });
+};
 var readCss = function () {
     return readFile('../dist/css/scene.css', function (contents) { return minify_css_string_1["default"](contents); });
 };
@@ -49,10 +52,12 @@ var readBundleJs = function () {
 var readIndex = function () {
     return readFile('../src/build/indexTemplate.html');
 };
-var promiseReads = [readJson(), readCss(), readBundleJs(), readIndex()];
+var promiseReads = [readJson(), readCss(), readBundleJs(), readIndex(), readFontJson()];
 Promise.all(promiseReads).then(function (_a) {
-    var jsonText = _a[0], cssText = _a[1], bundleJsText = _a[2], indexText = _a[3];
-    var indexHtmlText = indexText.replace('{jsonAnchor}', jsonText);
+    var jsonText = _a[0], cssText = _a[1], bundleJsText = _a[2], indexText = _a[3], fontJsonText = _a[4];
+    var indexHtmlText = indexText
+        .replace('{jsonAnchor}', jsonText)
+        .replace('{fontAnchor}', fontJsonText);
     writeFile('../index.html', indexHtmlText);
     var indexHtmlTextFor1C = indexText
         .replace(/<link id="cssLink".+?\/>/, "<style>" + cssText + "</style>")

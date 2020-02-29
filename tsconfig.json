@@ -14,6 +14,7 @@
 			"dom"
     ],
     "paths": {
+      "@build/*": ["./src/build/*"],
       "@constants/*": ["./src/constants/*"],
       "@entities/*": ["./src/entities/*"],
       "@lib/*": ["./src/lib/*"]

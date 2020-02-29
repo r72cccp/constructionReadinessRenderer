@@ -55,14 +55,22 @@ export class Logger {
     this.stdout.scrollTop = this.stdout.scrollHeight;
   };
 
-  public log(message: string): void {
+  public log(...messages: Array<any>): void {
     if (this.paused || this.disabled) return;
-    const messageItem = document.createElement('div');
-    messageItem.className = 'logger--container--item';
-    messageItem.textContent = message;
-    if (this.stdout.childNodes.length > this.MAX_MESSAGE_COUNT) {
-      this.stdout.removeChild(this.stdout.childNodes[0]);
-    };
-    this.pushToStdOut(messageItem);
+    messages.forEach((message: any) => {
+      const messageItem = document.createElement('div');
+      messageItem.className = 'logger--container--item';
+      if (typeof message === 'string') {
+        messageItem.textContent = message;
+      } else if (typeof message === 'object') {
+        messageItem.innerHTML = JSON.stringify(message, undefined, 2).replace(/^\s+/mg, (match) => {
+          return '&nbsp;'.repeat(match.length);
+        }).replace(/\n/g, '<br />');
+      };
+      if (this.stdout.childNodes.length > this.MAX_MESSAGE_COUNT) {
+        this.stdout.removeChild(this.stdout.childNodes[0]);
+      };
+      this.pushToStdOut(messageItem);
+    });
   };
 };

@@ -4,66 +4,83 @@ import { Logger } from '@lib/logger';
 
 const { PI_2 } = mathConstants;
 const logger = new Logger();
+type Movement = {
+  x: number;
+  y: number;
+};
 
-export const PointerLockControls = function(camera, domElement) {
-	this.domElement = domElement;
+export class PointerLockControls {
+  private camera: THREE.Camera;
+  private euler: THREE.Euler;
+  private previousPositionX: number;
+  private previousPositionY: number;
+  private vec: THREE.Vector3;
 
-	const euler = new THREE.Euler(0, 0, 0, 'YXZ');
-	const vec = new THREE.Vector3();
-
-	const onMouseMove = (event) => {
-    const buttonPressed = event.buttons === 1;
-    if (!buttonPressed) return;
-		const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-    const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-		euler.setFromQuaternion(camera.quaternion);
-		euler.y -= movementX * 0.002;
-		euler.x -= movementY * 0.002;
-		euler.x = Math.max(-PI_2, Math.min(PI_2, euler.x));
-		camera.quaternion.setFromEuler(euler);
-	};
-
-	this.connect = () => {
-		document.addEventListener('mousemove', onMouseMove, false);
-	};
-
-	this.disconnect = () => {
-		document.removeEventListener('mousemove', onMouseMove, false);
-	};
-
-	this.dispose = () => {
-		this.disconnect();
-	};
-
-	this.getObject = () => {
-		return camera;
-	};
-
-	this.getDirection = () => {
-		var direction = new THREE.Vector3(0, 0, - 1);
-		return function (v) {
-			return v.copy(direction).applyQuaternion(camera.quaternion);
-		};
-	};
-
-	this.moveForward = (distance) => {
-		vec.setFromMatrixColumn(camera.matrix, 0);
-		vec.crossVectors(camera.up, vec);
-		camera.position.addScaledVector(vec, distance);
-	};
-
-	this.moveRight = (distance) => {
-		vec.setFromMatrixColumn(camera.matrix, 0);
-		camera.position.addScaledVector(vec, distance);
-	};
-
-	this.lock = () => {
-		this.domElement.requestPointerLock();
-	};
-
-	this.unlock = () => {
-		document.exitPointerLock();
+  constructor(camera: THREE.Camera/*, domElement: HTMLElement*/) {
+    this.camera = camera;
+    this.euler = new THREE.Euler(0, 0, 0, 'YXZ');
+    this.previousPositionX = undefined;
+    this.previousPositionY = undefined;
+    this.vec = new THREE.Vector3();
+    this.init();
   };
-  this.getDirection();
-	this.connect();
+
+  private getMovement(event: MouseEvent): Movement {
+    if (event.movementX || event.movementY) {
+      // logger.log(`movement.x: ${event.movementX}, movement.y: ${event.movementY}`);
+      return { x: event.movementX, y: event.movementY };
+    };
+    const { clientX: currentPositionX, clientY: currentPositionY } = event;
+    let x = 0, y = 0;
+    if (typeof this.previousPositionX !== 'undefined') {
+      x = currentPositionX - this.previousPositionX;
+    };
+    if (typeof this.previousPositionY !== 'undefined') {
+      y = currentPositionY - this.previousPositionY;
+    };
+    // logger.log(`movement.x: ${x}, movement.y: ${y}`);
+    this.previousPositionX = currentPositionX;
+    this.previousPositionY = currentPositionY;
+    return { x, y };
+  };
+
+  private onMouseMove(event: MouseEvent): void {
+    const buttonPressed = event.buttons === 1;
+    if (!buttonPressed) {
+      const { clientX: currentPositionX, clientY: currentPositionY } = event;
+      this.previousPositionX = currentPositionX;
+      this.previousPositionY = currentPositionY;
+      return
+    };
+
+    const movement = this.getMovement(event);
+    this.euler.setFromQuaternion(this.camera.quaternion);
+    this.euler.y -= movement.x * 0.002;
+    this.euler.x -= movement.y * 0.002;
+    this.euler.x = Math.max(-PI_2, Math.min(PI_2, this.euler.x));
+    // logger.log(`event.clientX: ${event.clientX}, event.clientY: ${event.clientY}`)
+    // logger.log(`movementX: ${movement.x} movementY: ${movement.y} euler.x: ${this.euler.x}, euler.y: ${this.euler.y}, euler.z: ${this.euler.z}`);
+    this.camera.quaternion.setFromEuler(this.euler);
+  };
+
+	public init(): void {
+		document.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+	};
+
+	// public getObject(): THREE.Camera {
+	// 	return this.camera;
+	// };
+
+	public moveForward(distance) {
+    // logger.log(`PointerLockControls.moveForward, distance = ${distance}`);
+		this.vec.setFromMatrixColumn(this.camera.matrix, 0);
+		this.vec.crossVectors(this.camera.up, this.vec);
+		this.camera.position.addScaledVector(this.vec, distance);
+	};
+
+	public moveRight(distance) {
+    // logger.log(`PointerLockControls.moveRight, distance = ${distance}`);
+		this.vec.setFromMatrixColumn(this.camera.matrix, 0);
+		this.camera.position.addScaledVector(this.vec, distance);
+	};
 };

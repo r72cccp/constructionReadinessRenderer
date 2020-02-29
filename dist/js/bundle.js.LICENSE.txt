@@ -1,8 +1,12 @@
+/*! exports provided: ArcCurve */
+
+/*! exports provided: ArcCurve, CatmullRomCurve3, CubicBezierCurve, CubicBezierCurve3, EllipseCurve, LineCurve, LineCurve3, QuadraticBezierCurve, QuadraticBezierCurve3, SplineCurve */
+
 /*! exports provided: ArrayCamera */
 
 /*! exports provided: AxesHelper */
 
-/*! exports provided: AxesHelper, BoxBufferGeometry, Camera, Color, EdgesGeometry, Euler, Group, HemisphereLight, LineBasicMaterial, LineSegments, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, Object3D, PerspectiveCamera, PlaneGeometry, Raycaster, Scene, Vector2, Vector3, WebGLRenderer */
+/*! exports provided: AxesHelper, BoxBufferGeometry, BufferGeometry, Camera, Color, EdgesGeometry, Euler, Group, HemisphereLight, LineBasicMaterial, LineSegments, Font, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, Object3D, PerspectiveCamera, PlaneGeometry, Raycaster, Scene, TextGeometry, Vector2, Vector3, WebGLRenderer */
 
 /*! exports provided: Box3 */
 
@@ -16,6 +20,10 @@
 
 /*! exports provided: Camera */
 
+/*! exports provided: CatmullRom, QuadraticBezier, CubicBezier */
+
+/*! exports provided: CatmullRomCurve3 */
+
 /*! exports provided: Color */
 
 /*! exports provided: ComplexOfBuildings */
@@ -23,6 +31,14 @@
 /*! exports provided: ControlState */
 
 /*! exports provided: CubeTexture */
+
+/*! exports provided: CubicBezierCurve */
+
+/*! exports provided: CubicBezierCurve3 */
+
+/*! exports provided: Curve */
+
+/*! exports provided: CurvePath */
 
 /*! exports provided: DataTexture */
 
@@ -32,15 +48,23 @@
 
 /*! exports provided: DirectGeometry */
 
+/*! exports provided: Earcut */
+
 /*! exports provided: EdgesGeometry */
+
+/*! exports provided: EllipseCurve */
 
 /*! exports provided: Euler */
 
 /*! exports provided: EventDispatcher */
 
+/*! exports provided: ExtrudeGeometry, ExtrudeBufferGeometry */
+
 /*! exports provided: Face3 */
 
 /*! exports provided: Float64BufferAttribute, Float32BufferAttribute, Uint32BufferAttribute, Int32BufferAttribute, Uint16BufferAttribute, Int16BufferAttribute, Uint8ClampedBufferAttribute, Uint8BufferAttribute, Int8BufferAttribute, BufferAttribute */
+
+/*! exports provided: Font */
 
 /*! exports provided: Frustum */
 
@@ -59,6 +83,10 @@
 /*! exports provided: Line */
 
 /*! exports provided: LineBasicMaterial */
+
+/*! exports provided: LineCurve */
+
+/*! exports provided: LineCurve3 */
 
 /*! exports provided: LineSegments */
 
@@ -82,7 +110,11 @@
 
 /*! exports provided: MeshLambertMaterial */
 
+/*! exports provided: MeshPhongMaterial */
+
 /*! exports provided: Object3D */
+
+/*! exports provided: Path */
 
 /*! exports provided: PerspectiveCamera */
 
@@ -91,6 +123,10 @@
 /*! exports provided: PlaneGeometry, PlaneBufferGeometry */
 
 /*! exports provided: PointerLockControls */
+
+/*! exports provided: QuadraticBezierCurve */
+
+/*! exports provided: QuadraticBezierCurve3 */
 
 /*! exports provided: Quaternion */
 
@@ -108,7 +144,17 @@
 
 /*! exports provided: ShaderMaterial */
 
+/*! exports provided: Shape */
+
+/*! exports provided: ShapePath */
+
+/*! exports provided: ShapeUtils */
+
 /*! exports provided: Sphere */
+
+/*! exports provided: SplineCurve */
+
+/*! exports provided: TextGeometry, TextBufferGeometry */
 
 /*! exports provided: Texture */
 
@@ -122,7 +168,7 @@
 
 /*! exports provided: Vector4 */
 
-/*! exports provided: Vertex, Floor, Light, axesHelper, Cube, HTMLBlock */
+/*! exports provided: Vertex, Floor, Light, axesHelper, Cube, HTMLBlock, TextBlock */
 
 /*! exports provided: WebGLAnimation */
 
@@ -359,6 +405,10 @@
   \*************************************************/
 
 /*!*************************************************!*\
+  !*** ./node_modules/three/src/extras/Earcut.js ***!
+  \*************************************************/
+
+/*!*************************************************!*\
   !*** ./node_modules/three/src/math/Triangle.js ***!
   \*************************************************/
 
@@ -383,11 +433,31 @@
   \***************************************************/
 
 /*!****************************************************!*\
+  !*** ./node_modules/three/src/extras/core/Font.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/three/src/extras/core/Path.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
   !*** ./node_modules/three/src/textures/Texture.js ***!
   \****************************************************/
 
 /*!*****************************************************!*\
   !*** ./node_modules/three/src/extras/ImageUtils.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/three/src/extras/ShapeUtils.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/three/src/extras/core/Curve.js ***!
+  \*****************************************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/three/src/extras/core/Shape.js ***!
   \*****************************************************/
 
 /*!*****************************************************!*\
@@ -423,6 +493,10 @@
   \********************************************************/
 
 /*!********************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/Curves.js ***!
+  \********************************************************/
+
+/*!********************************************************!*\
   !*** ./node_modules/three/src/objects/LineSegments.js ***!
   \********************************************************/
 
@@ -433,6 +507,18 @@
 /*!********************************************************!*\
   !*** ./node_modules/three/src/textures/DataTexture.js ***!
   \********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./node_modules/three/src/extras/core/CurvePath.js ***!
+  \*********************************************************/
+
+/*!*********************************************************!*\
+  !*** ./node_modules/three/src/extras/core/ShapePath.js ***!
+  \*********************************************************/
+
+/*!**********************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/ArcCurve.js ***!
+  \**********************************************************/
 
 /*!**********************************************************!*\
   !*** ./node_modules/three/src/geometries/BoxGeometry.js ***!
@@ -447,8 +533,20 @@
   \**********************************************************/
 
 /*!***********************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/LineCurve.js ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
+  !*** ./node_modules/three/src/geometries/TextGeometry.js ***!
+  \***********************************************************/
+
+/*!***********************************************************!*\
   !*** ./node_modules/three/src/renderers/WebGLRenderer.js ***!
   \***********************************************************/
+
+/*!************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/LineCurve3.js ***!
+  \************************************************************/
 
 /*!************************************************************!*\
   !*** ./node_modules/three/src/geometries/EdgesGeometry.js ***!
@@ -467,8 +565,24 @@
   \*************************************************************/
 
 /*!*************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/SplineCurve.js ***!
+  \*************************************************************/
+
+/*!*************************************************************!*\
   !*** ./node_modules/three/src/renderers/webgl/WebGLInfo.js ***!
   \*************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/three/src/extras/core/Interpolations.js ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/EllipseCurve.js ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./node_modules/three/src/geometries/ExtrudeGeometry.js ***!
+  \**************************************************************/
 
 /*!**************************************************************!*\
   !*** ./node_modules/three/src/renderers/webgl/WebGLState.js ***!
@@ -488,6 +602,10 @@
 
 /*!***************************************************************!*\
   !*** ./node_modules/three/src/materials/MeshDepthMaterial.js ***!
+  \***************************************************************/
+
+/*!***************************************************************!*\
+  !*** ./node_modules/three/src/materials/MeshPhongMaterial.js ***!
   \***************************************************************/
 
 /*!***************************************************************!*\
@@ -551,6 +669,14 @@
   \*****************************************************************/
 
 /*!******************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/CatmullRomCurve3.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/CubicBezierCurve.js ***!
+  \******************************************************************/
+
+/*!******************************************************************!*\
   !*** ./node_modules/three/src/materials/MeshDistanceMaterial.js ***!
   \******************************************************************/
 
@@ -565,6 +691,10 @@
 /*!******************************************************************!*\
   !*** ./node_modules/three/src/renderers/webgl/WebGLShadowMap.js ***!
   \******************************************************************/
+
+/*!*******************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/CubicBezierCurve3.js ***!
+  \*******************************************************************/
 
 /*!*******************************************************************!*\
   !*** ./node_modules/three/src/renderers/shaders/UniformsUtils.js ***!
@@ -605,6 +735,14 @@
 /*!*********************************************************************!*\
   !*** ./node_modules/three/src/renderers/webgl/WebGLRenderStates.js ***!
   \*********************************************************************/
+
+/*!**********************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/QuadraticBezierCurve.js ***!
+  \**********************************************************************/
+
+/*!***********************************************************************!*\
+  !*** ./node_modules/three/src/extras/curves/QuadraticBezierCurve3.js ***!
+  \***********************************************************************/
 
 /*!***********************************************************************!*\
   !*** ./node_modules/three/src/renderers/webgl/WebGLBufferRenderer.js ***!

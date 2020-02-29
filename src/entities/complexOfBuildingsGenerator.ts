@@ -1,5 +1,5 @@
 import * as THREE from '@lib/three';
-import { HTMLBlock, Vertex } from '@lib/primitives';
+import { TextBlock, Vertex } from '@lib/primitives';
 import { themeSizes } from '@constants/primitiveSizes';
 import { BuildingBlock } from '@entities/buildingBlock';
 
@@ -31,11 +31,11 @@ export const ComplexOfBuildings = (): THREE.Group => {
     const buildingMiddle = positionX + (sections.length * cubeEdgeLength) / 2;
     const buildingTop = buildingMaximumSectionHeight * (cubeEdgeLength + 2);
 
-    const faceTexture = document.createElement('div');
-    faceTexture.textContent = complexOfBuildings['Проект'];
-    faceTexture.className = 'building-annotation';
+    // const faceTexture = document.createElement('div');
+    // faceTexture.textContent = complexOfBuildings['Проект'];
+    // faceTexture.className = 'building-annotation';
     const buildingAnnotationPosition = new Vertex(buildingMiddle, buildingTop, cubeEdgeLength / 2);
-    const buildingAnnotation = new HTMLBlock(buildingAnnotationPosition, faceTexture);
+    const buildingAnnotation = new TextBlock(buildingAnnotationPosition, complexOfBuildings['Проект']);
     objects.add(buildingAnnotation);
 
     positionX += cubeEdgeLength;

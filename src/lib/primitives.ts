@@ -1,9 +1,12 @@
 import * as THREE from '@lib/three';
 import { CSS3DObject } from '@lib/CSS3DRenderer';
+
 import { themeColors } from '@constants/colors';
 import { themeSizes } from '@constants/primitiveSizes';
 import { mathConstants } from '@constants/mathematical';
+import { Logger } from './logger';
 
+const logger = new Logger();
 const { PI_2 } = mathConstants;
 const { cubeEdgeLength } = themeSizes;
 const cubeGeometry = new THREE.BoxBufferGeometry(cubeEdgeLength, cubeEdgeLength, cubeEdgeLength);
@@ -74,6 +77,68 @@ export class HTMLBlock extends CSS3DObject {
     const { rx, ry, rz } = objectPosition.rotation || {};
     
     super(htmlDOMElement);
+    this.position.x = x;
+    this.position.y = y;
+    this.position.z = z;
+    this.rotation.x = rx;
+    this.rotation.y = ry;
+    this.rotation.z = rz;
+  };
+};
+
+export type TextBlockOptions = {
+  bevelEnabled?: boolean;
+  bevelOffset?: number;
+  bevelSegments?: number;
+  bevelSize?: number;
+  bevelThickness?: number;
+  curveSegments?: number;
+  color?: number;
+  height?: number;
+  size?: number;
+};
+
+const defaultTextOptions: TextBlockOptions = {
+  bevelEnabled: false,
+  bevelOffset: 0,
+  bevelSegments: 0,
+  bevelSize: 0,
+  bevelThickness: 0,
+  color: 0xff0000,
+  curveSegments: 4,
+  height: 0.3,
+  size: 3,
+};
+
+export class TextBlock extends THREE.Mesh {
+  // Функционал с загрузкой шрифта из файла более правильный, но в браузере 1С загрузка данных из файлов запрещена
+  // private static fontLoader: THREE.FontLoader;
+  private static font: THREE.Font;
+
+  constructor(objectPosition: Vertex, text: string, textOptions = defaultTextOptions) {
+    // if (!TextBlock.fontLoader) {
+    //   TextBlock.fontLoader = new FontLoader();
+    // };
+    // TextBlock.fontLoader.load(path.resolve(__dirname, '@build/helvetiker_regular.typeface.json'));
+    if (!TextBlock.font) {
+      logger.log('Инициализация шрифта')
+      TextBlock.font = new THREE.Font((window as any).Font);
+    };
+    const textGeometry = new THREE.TextGeometry(text, {
+      font: TextBlock.font,
+      ...defaultTextOptions,
+      ...textOptions,
+    });
+    textGeometry.center();
+    const textBufferGeometry = new THREE.BufferGeometry().fromGeometry(textGeometry);
+    const materials = [
+      new THREE.MeshBasicMaterial({ color: textOptions.color || 0xffff33, flatShading: true }),
+      new THREE.MeshBasicMaterial({ color: textOptions.color >> 1 }),
+    ];
+    super(textBufferGeometry, materials);
+    const { x, y, z } = objectPosition.position || {};
+    const { rx, ry, rz } = objectPosition.rotation || {};
+    
     this.position.x = x;
     this.position.y = y;
     this.position.z = z;

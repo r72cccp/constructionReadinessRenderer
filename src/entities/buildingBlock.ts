@@ -1,4 +1,4 @@
-import { Cube, HTMLBlock, Vertex } from '@lib/primitives';
+import { Cube, TextBlock, TextBlockOptions, Vertex } from '@lib/primitives';
 import { themeColors } from '@constants/colors';
 import { themeSizes } from '@constants/primitiveSizes';
 import { lastArrayElement } from '@lib/arrayUtils';
@@ -6,6 +6,7 @@ import * as THREE from '@lib/three';
 
 
 const { cubeEdgeLength } = themeSizes;
+// const buildingReadinessLabelProps: TextBlockOptions = {};
 const faceColors: Array<number> = themeColors.readinessColors;
 const getBuildingBlockColor = (readinessPercent: number): number => {
   if (readinessPercent <= 0) return faceColors[0];
@@ -22,14 +23,13 @@ export const BuildingBlock = (readinessPercent: number, cubePosition: Vertex): T
   const color = getBuildingBlockColor(readinessPercent)
   const cube = new Cube(cubePosition, color);
 
-  const faceTexture = document.createElement('div');
-  faceTexture.textContent = `${readinessPercent.toFixed(2)}%`;
-  faceTexture.className = 'face-texture';
-
   const textPosition = { ...cubePosition };
   textPosition.position.z = cubePosition.position.z + cubeEdgeLength / 2;
-  const faceHTMLObject = new HTMLBlock(textPosition, faceTexture);
-  cube.add(faceHTMLObject);
+  const buildingReadinessLabelProps = {
+    color: 0x77ffaa,
+  };
+  const TextObject = new TextBlock(textPosition, `${readinessPercent.toFixed(2)}%`, buildingReadinessLabelProps);
+  cube.add(TextObject);
 
   return cube;
 };

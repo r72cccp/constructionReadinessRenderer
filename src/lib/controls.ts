@@ -1,104 +1,119 @@
 import * as THREE from '@lib/three';
 import { Logger } from '@lib/logger';
 
-export type ControlStateProps = {
-  canJump?: boolean;
-  direction?: THREE.Vector3;
-  moveBackward?: boolean;
-  moveForward?: boolean;
-  moveLeft?: boolean;
-  moveRight?: boolean;
-  mouse?: THREE.Vector2;
-  prevTime?: number;
-  raycaster?: THREE.Raycaster;
-  runMode?: boolean;
-  velocity?: THREE.Vector3;
-};
-
 export class ControlState {
-  public canJump;
-  public direction;
+  private actions: Array<string>
+  public canJump: boolean;
+  public direction: THREE.Vector3;
   public INTERSECTED;
   private logger: Logger;
-  public moveBackward;
-  public moveForward;
-  public moveLeft;
-  public moveRight;
-  public prevTime;
-  public raycaster;
-  public mouse;
-  public runMode;
-  public velocity;
+  public moveBackward: boolean;
+  public moveForward: boolean;
+  public moveLeft: boolean;
+  public moveRight: boolean;
+  public prevTime: number;
+  public raycaster: THREE.Raycaster;
+  private renderNeeded: boolean;
+  public mouse: THREE.Vector2;
+  public runMode: boolean;
+  public velocity: THREE.Vector3;
 
-	constructor(props?: ControlStateProps) {
-    this.canJump = props && props.canJump || false;
-    this.direction = props && props.direction || new THREE.Vector3();
+  constructor() {
+    this.canJump = false;
+    this.direction = new THREE.Vector3();
     this.INTERSECTED = null;
     this.logger = new Logger();
-    this.moveBackward = props && props.moveBackward || false;
-    this.moveForward = props && props.moveForward || false;
-    this.moveLeft = props && props.moveLeft || false;
-    this.moveRight = props && props.moveRight || false;
-    this.prevTime = props && props.prevTime || performance.now();
+    this.actions = ['moveBackward', 'moveForward', 'moveLeft', 'moveRight', 'canJump', 'runMode'];
+    this.moveBackward = false;
+    this.moveForward = false;
+    this.moveLeft = false;
+    this.moveRight = false;
+    this.prevTime = performance.now();
     this.raycaster = new THREE.Raycaster();
+    this.renderNeeded = true;
     this.mouse = new THREE.Vector2();
-    this.runMode = props && props.runMode || false;
-    this.velocity = props && props.velocity || new THREE.Vector3();
+    this.runMode = false;
+    this.velocity = new THREE.Vector3();
   };
 
   private onKeyDown = (event) => {
-    this.runMode = event.shiftKey;
     switch (event.keyCode) {
+      case 16: // shift
+        this.registerAction('runMode', true);
+        break;
       case 38: // up
       case 87: // w
-        this.moveForward = true;
+        this.registerAction('moveForward', true);
         break;
 
       case 37: // left
       case 65: // a
-        this.moveLeft = true;
+        this.registerAction('moveLeft', true);
         break;
 
       case 40: // down
       case 83: // s
-        this.moveBackward = true;
+        this.registerAction('moveBackward', true);
         break;
 
       case 39: // right
       case 68: // d
-        this.moveRight = true;
+        this.registerAction('moveRight', true);
         break;
 
       case 32: // space
         if (this.canJump === true) this.velocity.y += 350;
-        this.canJump = false;
+        this.registerAction('canJump', false);
         break;
     }
   };
 
   private onKeyUp = (event) => {
-    this.runMode = event.shiftKey;
+    // this.logger.log({ 'event.keyCode': event.keyCode });
     switch (event.keyCode) {
+      case 16: // shift
+        this.registerAction('runMode', false);
+        break;
       case 38: // up
       case 87: // w
-        this.moveForward = false;
+        this.registerAction('moveForward', false);
         break;
 
       case 37: // left
       case 65: // a
-        this.moveLeft = false;
+        this.registerAction('moveLeft', false);
         break;
 
       case 40: // down
       case 83: // s
-        this.moveBackward = false;
+        this.registerAction('moveBackward', false);
         break;
 
       case 39: // right
       case 68: // d
-        this.moveRight = false;
+        this.registerAction('moveRight', false);
         break;
     }
+  };
+
+  private registerAction(to: string, value: boolean): void {
+    this.renderNeeded = true;
+    // this.logger.log(`#113, to: ${to} = ${value}`)
+    this[to] = value;
+  };
+
+  private anyAction(): boolean {
+    return this.actions.map((actionName) => this[actionName]).some((x) => x);
+  };
+
+  public registerRendering(): void {
+    if (!this.anyAction()) {
+      this.renderNeeded = false;
+    };
+  };
+
+  public isRenderNeeded(): boolean {
+    return this.renderNeeded;
   };
 
   private onMouseMove = (event) => {
@@ -106,10 +121,11 @@ export class ControlState {
     // (от -1 до +1) для обоих компонентов.
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    this.logger.log(`this.mouse.x: '${this.mouse.x}', this.mouse.y: '${this.mouse.y}'`)
+    this.renderNeeded = true;
   };
 
   public init = () => {
+    this.renderNeeded = true;
     document.addEventListener('mousemove', this.onMouseMove, false);
     document.addEventListener('keydown', this.onKeyDown, false);
     document.addEventListener('keyup', this.onKeyUp, false);
